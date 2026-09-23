@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة إدارة Dent Supply</title>
+<style>
+:root{--bg:#f3f8fb;--card:#fff;--ink:#16323f;--muted:#4c6673;--primary:#1c6e8c;--line:#dce8ed;--danger:#b3543f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}.wrap{max-width:900px;margin:auto;padding:24px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 8px 24px #16323f12}h1,h2{margin-top:0}label{display:block;font-weight:bold;margin:12px 0 6px}input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;font:inherit}textarea{min-height:80px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}button{border:0;border-radius:9px;padding:11px 16px;font:inherit;font-weight:bold;cursor:pointer}.primary{background:var(--primary);color:#fff}.secondary{background:#e4f1f6;color:var(--ink)}.danger{background:#f8e5e0;color:var(--danger)}.product{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:14px 0}.product-info{min-width:0}.product-info strong,.product-info small{display:block}.product-info small{color:var(--muted);margin-top:4px}.hidden{display:none}.notice{color:var(--muted);font-size:.9rem;line-height:1.7}.status{margin-top:12px;font-weight:bold}.lock{text-align:center;max-width:460px;margin:70px auto}.lock input{margin:10px 0}.badge{display:inline-block;background:#e4f1f6;color:var(--primary);padding:5px 9px;border-radius:20px;font-size:.8rem}@media(max-width:600px){.row{grid-template-columns:1fr}.product{align-items:flex-start;flex-direction:column}.product .actions{margin-top:0}}
+</style>
+</head>
+<body>
+<div id="login" class="wrap lock card">
+  <h1>لوحة إدارة Dent Supply</h1>
+  <p class="notice">هذه لوحة تجريبية خاصة بك. لا تشارك رابطها أو كلمة المرور.</p>
+  <input id="password" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+  <button class="primary" id="loginBtn">دخول</button>
+  <div class="status" id="loginStatus"></div>
+</div>
+<main id="panel" class="wrap hidden">
+  <div class="card">
+    <h1>إدارة المنتجات</h1>
+    <p class="notice">أضف المنتجات أو عدّلها واحذفها. يتم الحفظ على هذا المتصفح فقط مؤقتًا.</p>
+    <form id="productForm">
+      <input type="hidden" id="editId">
+      <div class="row"><div><label for="name">اسم المنتج</label><input id="name" required></div><div><label for="price">السعر بالدينار</label><input id="price" type="number" min="0" required></div></div>
+      <div class="row"><div><label for="cat">التصنيف</label><select id="cat"><option value="exam">أدوات فحص</option><option value="fill">حشو وترميم</option><option value="surgery">جراحة وقلع</option><option value="clean">تنظيف وتلميع</option><option value="consumables">مستهلكات</option></select></div><div><label for="img">رابط الصورة</label><input id="img" placeholder="products/p15.jpg"></div></div>
+      <label for="desc">الوصف</label><textarea id="desc" required></textarea>
+      <div class="actions"><button class="primary" type="submit" id="saveBtn">إضافة المنتج</button><button class="secondary" type="button" id="cancelBtn">مسح النموذج</button></div>
+    </form>
+    <div class="status" id="status"></div>
+  </div>
+  <div class="card"><h2>المنتجات الحالية <span class="badge" id="count">0</span></h2><div id="products"></div><div class="actions"><button class="secondary" id="downloadBtn">تنزيل نسخة JSON</button><button class="danger" id="logoutBtn">تسجيل الخروج</button></div></div>
+  <div class="card"><p class="notice"><strong>ملاحظة مهمة:</strong> هذه نسخة أولية تحفظ البيانات في localStorage على جهازك. حتى تظهر المنتجات الجديدة لجميع الزوار، سنربطها لاحقًا بقاعدة بيانات أو خدمة إدارة حقيقية.</p></div>
+</main>
+<script>
+const PASSWORD="seno@@##";
+const KEY="dentsupply_admin_products";
+const defaults=[
+{id:"p1",cat:"exam",name:"مسبر أسنان مزدوج",desc:"مسبر فحص دقيق من ستانلس ستيل طبي، مقاس قياسي.",price:8500,img:"products/p1.jpg"},
+{id:"p2",cat:"exam",name:"مرآة فحص فم رقم 5",desc:"مرآة عاكسة بمقبض معدني، مقاومة للبخار.",price:6000,img:"products/p2.jpg"},
+{id:"p3",cat:"exam",name:"ملقط فحص أسنان",desc:"ملقط دقيق لإمساك القطن والمواد أثناء الفحص.",price:7000,img:"products/p3.jpg"},
+{id:"p4",cat:"fill",name:"طقم أدوات حشو مركب",desc:"طقم كامل لوضع وتشكيل الحشوات التجميلية.",price:32000,img:"products/p4.jpg"},
+{id:"p5",cat:"fill",name:"سباتيولا خلط الحشوة",desc:"مقاس مزدوج لخلط مواد الحشو والسمنت.",price:9500,img:"products/p5.jpg"},
+{id:"p6",cat:"fill",name:"أداة كاربر لتشكيل الحشو",desc:"طرفين للنحت الدقيق قبل التصلب.",price:11000,img:"products/p6.jpg"},
+{id:"p7",cat:"surgery",name:"ملقط قلع أضراس علوي",desc:"ستانلس ستيل جراحي معتمد، مقبض مريح.",price:45000,img:"products/p7.jpg"},
+{id:"p8",cat:"surgery",name:"مبعد أنسجة جراحي",desc:"لإبعاد اللثة أثناء العمليات الجراحية البسيطة.",price:21000,img:"products/p8.jpg"},
+{id:"p9",cat:"surgery",name:"مشرط جراحي بشفرات بديلة",desc:"مقبض قابل لإعادة الاستخدام مع 10 شفرات معقمة.",price:15500,img:"products/p9.jpg"},
+{id:"p10",cat:"clean",name:"مقياس تارتار وتنظيف",desc:"طرفين لإزالة الجير من سطح وجذر السن.",price:13000,img:"products/p10.jpg"},
+{id:"p11",cat:"clean",name:"طقم تلميع وتلميع الأسنان",desc:"كؤوس تلميع مطاطية بثلاث درجات خشونة.",price:17000,img:"products/p11.jpg"},
+{id:"p12",cat:"consumables",name:"قفازات فحص لاتكس (صندوق)",desc:"صندوق 100 قفاز، مقاسات متعددة.",price:12000,img:"products/p12.jpg"},
+{id:"p13",cat:"consumables",name:"كمامات طبية ثلاثية الطبقات",desc:"صندوق 50 كمامة معتمدة طبياً.",price:8000,img:"products/p13.jpg"},
+{id:"p14",cat:"consumables",name:"لفافات قطن طبي للفم",desc:"عبوة 100 قطعة، امتصاص عالي.",price:4500,img:"products/p14.jpg"}
+];
+let products=JSON.parse(localStorage.getItem(KEY)||"null")||defaults;const $=id=>document.getElementById(id);function save(){localStorage.setItem(KEY,JSON.stringify(products))}function render(){ $('count').textContent=products.length;$('products').innerHTML=products.map(p=>`<div class="product"><div class="product-info"><strong>${p.name}</strong><small>${p.price.toLocaleString('ar-IQ')} د.ع — ${p.desc}</small></div><div class="actions"><button class="secondary" data-edit="${p.id}">تعديل</button><button class="danger" data-delete="${p.id}">حذف</button></div></div>`).join('')||'<p class="notice">لا توجد منتجات.</p>'}function clearForm(){$('productForm').reset();$('editId').value='';$('saveBtn').textContent='إضافة المنتج'}function fill(p){$('editId').value=p.id;$('name').value=p.name;$('price').value=p.price;$('cat').value=p.cat;$('img').value=p.img||'';$('desc').value=p.desc;$('saveBtn').textContent='حفظ التعديل';scrollTo({top:0,behavior:'smooth'})}
+$('loginBtn').onclick=()=>{if($('password').value===PASSWORD){$('login').classList.add('hidden');$('panel').classList.remove('hidden');render()}else $('loginStatus').textContent='كلمة المرور غير صحيحة'};$('password').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};$('productForm').onsubmit=e=>{e.preventDefault();const item={id:$('editId').value||'p'+Date.now(),name:$('name').value.trim(),desc:$('desc').value.trim(),price:Number($('price').value),img:$('img').value.trim(),cat:$('cat').value};const i=products.findIndex(p=>p.id===item.id);if(i<0)products.push(item);else products[i]=item;save();render();clearForm();$('status').textContent='تم حفظ المنتج بنجاح'};$('cancelBtn').onclick=clearForm;$('products').onclick=e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit)fill(products.find(p=>p.id===edit.dataset.edit));if(del&&confirm('هل تريد حذف هذا المنتج؟')){products=products.filter(p=>p.id!==del.dataset.delete);save();render()}};$('downloadBtn').onclick=()=>{const blob=new Blob([JSON.stringify(products,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='dentsupply-products.json';a.click();URL.revokeObjectURL(a.href)};$('logoutBtn').onclick=()=>location.reload();
+</script>
+</body>
+</html>
