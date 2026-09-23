@@ -13,7 +13,7 @@
 <div id="status" class="status"></div><div id="list" class="list"></div>
 </section></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const URL='https://ncurbamdczoiafvcnhzd.supabase.co',KEY='sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF',db=window.supabase.createClient(URL,KEY),cats={exam:'أدوات فحص',fill:'حشو وترميم',surgery:'جراحة وقلع',clean:'تنظيف وتلميع',consumables:'مستهلكات'};
+const SUPA_URL='https://ncurbamdczoiafvcnhzd.supabase.co',KEY='sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF',db=window.supabase.createClient(URL,KEY),cats={exam:'أدوات فحص',fill:'حشو وترميم',surgery:'جراحة وقلع',clean:'تنظيف وتلميع',consumables:'مستهلكات'};
 const DEFAULT_PRODUCTS=[
   {id:'p1',category:'exam',name:'مسبر أسنان مزدوج',description:'مسبر فحص دقيق من ستانلس ستيل طبي.',price:8500,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p1.jpg'},
   {id:'p2',category:'exam',name:'مرآة فحص فم رقم 5',description:'مرآة عاكسة بجودة عالية ومقبض مريح.',price:6000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p2.jpg'},
