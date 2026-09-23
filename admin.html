@@ -13,10 +13,59 @@
 <div id="status" class="status"></div><div id="list" class="list"></div>
 </section></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const URL='https://ncurbamdczoiafvcnhzd.supabase.co',KEY='sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF',db=window.supabase.createClient(URL,KEY),cats={exam:'أدوات فحص',fill:'حشو وترميم',surgery:'جراحة وقلع',clean:'تنظيف وتلميع',consumables:'مستهلكات'};let editing=null;
-const $=s=>document.querySelector(s),form=$('#form');function status(t,bad=false){const e=$('#status');e.textContent=t;e.className='status show';e.style.color=bad?'#b3543f':'#16865b';e.style.background=bad?'#fff3f1':'#edf8f2'}
+const URL='https://ncurbamdczoiafvcnhzd.supabase.co',KEY='sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF',db=window.supabase.createClient(URL,KEY),cats={exam:'أدوات فحص',fill:'حشو وترميم',surgery:'جراحة وقلع',clean:'تنظيف وتلميع',consumables:'مستهلكات'};
+const DEFAULT_PRODUCTS=[
+  {id:'p1',category:'exam',name:'مسبر أسنان مزدوج',description:'مسبر فحص دقيق من ستانلس ستيل طبي.',price:8500,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p1.jpg'},
+  {id:'p2',category:'exam',name:'مرآة فحص فم رقم 5',description:'مرآة عاكسة بجودة عالية ومقبض مريح.',price:6000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p2.jpg'},
+  {id:'p3',category:'exam',name:'ملقط فحص أسنان',description:'ملقط دقيق لإمساك القطن والمواد أثناء الفحص.',price:7000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p3.jpg'},
+  {id:'p4',category:'fill',name:'طقم أدوات حشو مركب',description:'طقم كامل لوضع وتشكيل الحشوات التجميلية.',price:32000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p4.webp'},
+  {id:'p5',category:'fill',name:'سباتيولا خلط الحشوة',description:'مقاس مزدوج لخلط مواد الحشو والسمنت.',price:9500,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p5.jpg'},
+  {id:'p6',category:'fill',name:'أداة كاربر لتشكيل الحشو',description:'طرفين للنحت الدقيق قبل التصلب.',price:11000,image_url:''},
+  {id:'p7',category:'surgery',name:'ملقط قلع أضراس علوي',description:'ستانلس ستيل جراحي معتمد ومريح.',price:45000,image_url:''},
+  {id:'p8',category:'surgery',name:'مبعد أنسجة جراحي',description:'لإبعاد اللثة أثناء العمليات البسيطة.',price:21000,image_url:''},
+  {id:'p9',category:'surgery',name:'مشرط جراحي بشفرات بديلة',description:'مقبض قابل لإعادة الاستخدام مع شفرات معقمة.',price:15500,image_url:''},
+  {id:'p10',category:'clean',name:'مقياس تارتار وتنظيف',description:'طرفين لإزالة الجير من السطح.',price:13000,image_url:''},
+  {id:'p11',category:'clean',name:'طقم تلميع الأسنان',description:'كؤوس تلميع مطاطية بثلاث درجات خشونة.',price:17000,image_url:''},
+  {id:'p12',category:'consumables',name:'قفازات فحص لاتكس',description:'صندوق 100 قفاز، مقاسات متعددة.',price:12000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p12.jpg'},
+  {id:'p13',category:'consumables',name:'كمامات طبية ثلاثية الطبقات',description:'صندوق 50 كمامة معتمدة طبياً.',price:8000,image_url:''},
+  {id:'p14',category:'consumables',name:'لفافات قطن طبي للفم',description:'عبوة 100 قطعة، امتصاص عالي.',price:4500,image_url:''}
+];
+let editing=null;
+const $=s=>document.querySelector(s),form=$('#form');
+function status(t,bad=false){const e=$('#status');e.textContent=t;e.className='status show';e.style.color=bad?'#b3543f':'#16865b';e.style.background=bad?'#fff3f1':'#edf8f2'}
 function normalize(p){return{id:p.id,name:p.name||'',category:p.category||p.cat||'consumables',description:p.description||p.desc||'',price:Number(p.price)||0,image_url:p.image_url||''}}
-async function load(){const {data,error}=await db.from('products').select('*').order('created_at',{ascending:false});if(error){status('تعذر قراءة المنتجات من Supabase: '+error.message,true);return}render((data||[]).map(normalize))}
+async function seedProducts(){
+  try{
+    const {data:rows,error:getErr}=await db.from('products').select('id');
+    if(getErr){throw getErr;}
+    if(rows && rows.length) return;
+    const payload=DEFAULT_PRODUCTS.map(p=>({
+      id: p.id,
+      name: p.name,
+      category: p.category,
+      description: p.description,
+      price: p.price,
+      image_url: p.image_url,
+      created_at: new Date().toISOString()
+    }));
+    const {error:insertErr}=await db.from('products').insert(payload);
+    if(insertErr) throw insertErr;
+    status('تمت إضافة المنتجات الأساسية إلى قاعدة البيانات.');
+  }catch(err){
+    console.error(err);
+    status('تعذر تهيئة المنتجات الأساسية: '+(err.message||err),true);
+  }
+}
+async function load(){
+  try{
+    await seedProducts();
+    const {data,error}=await db.from('products').select('*').order('created_at',{ascending:false});
+    if(error){status('تعذر قراءة المنتجات من Supabase: '+error.message,true);return}
+    render((data||[]).map(normalize))
+  }catch(err){
+    status('تعذر تحميل المنتجات: '+(err.message||err),true);
+  }
+}
 function render(items){$('#list').innerHTML=items.length?items.map(p=>`<div class="item"><div><strong>${p.name}</strong><small>${cats[p.category]||p.category} • ${p.price.toLocaleString('ar-IQ')} د.ع</small></div><div class="item-actions"><button class="mini" data-edit="${p.id}">تعديل</button><button class="mini danger" data-delete="${p.id}">حذف</button></div></div>`).join(''):'<div class="item">لا توجد منتجات في قاعدة البيانات.</div>'}
 function clear(){form.reset();editing=null;form.querySelector('[name=price]').value=''}
 form.addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(form),row={name:String(f.get('name')).trim(),category:f.get('category'),description:String(f.get('description')||'').trim(),price:Number(f.get('price')||0),image_url:String(f.get('image_url')||'').trim()};let result;if(editing)result=await db.from('products').update(row).eq('id',editing);else result=await db.from('products').insert(row);if(result.error){status('فشل الحفظ: '+result.error.message,true);return}status(editing?'تم تحديث المنتج.':'تمت إضافة المنتج.');clear();load()});
