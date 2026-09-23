@@ -1,78 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dent Supply</title>
-<script>
-(async function () {
-  try {
-    const response = await fetch('https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/5385e51cdb051b219ae04f71f1115f18ee65164c/index.html', { cache: 'no-store' });
-    if (!response.ok) throw new Error('old storefront unavailable');
-    let html = await response.text();
-    html = html.replace('</head>', '<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script></head>');
-    const bridge = `
-<style>
-.btn-wa{font-size:0!important;display:inline-flex!important;align-items:center;justify-content:center}
-.btn-wa svg{width:19px;height:19px;display:block}
-.card-media img{width:100%;height:100%;object-fit:cover;display:block;border-radius:0}
-.card-media{padding:0!important;background:#f3f8fb;overflow:hidden}
-.drawer-product-thumb img{width:100%;height:100%;object-fit:cover;display:block;border-radius:10px}
-</style>
-<script>
-(function(){
-  const whatsappIcon='<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.6.8 5 2.2 7L3 29l6.7-2.4c1.9 1 4.1 1.6 6.3 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3zm0 22.7c-2 0-3.9-.5-5.6-1.5l-.4-.2-4 1.4 1.3-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.8 0-5.9 4.9-10.7 10.9-10.7s10.9 4.8 10.9 10.7S22 25.7 16 25.7zm6-8c-.3-.2-1.9-1-2.2-1s-.5-.1-.7.1-.8 1-1 1.2-.4.2-.7.1c-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3s0-.5.2-.6c.2-.2.3-.4.5-.6s.2-.3.3-.5 0-.4 0-.6-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3 4.8 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.9-.8 2.2-1.5.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.4z"/></svg>';
-  function replaceWhatsAppButtons(){document.querySelectorAll('.btn-wa').forEach(function(btn){btn.innerHTML=whatsappIcon;btn.setAttribute('aria-label','طلب عبر واتساب');btn.setAttribute('title','طلب عبر واتساب')})}
-  function attachImages(){
-    if (!window.DATA || !Array.isArray(window.DATA.products)) return;
-    document.querySelectorAll('.card').forEach(function(card){
-      const addBtn = card.querySelector('[data-add]');
-      if (!addBtn) return;
-      const id = String(addBtn.dataset.add || '');
-      const product = window.DATA.products.find(function(p){ return String(p.id) === id; });
-      if (!product || !product.image_url) return;
-      const media = card.querySelector('.card-media');
-      if (!media) return;
-      if (media.dataset.imageBound === '1') return;
-      media.dataset.imageBound = '1';
-      media.innerHTML = '<img src="' + product.image_url + '" alt="' + (product.name || 'منتج') + '" />';
-      media.style.padding = '0';
-      media.style.background = '#f3f8fb';
-    });
-  }
-  new MutationObserver(function(){ replaceWhatsAppButtons(); attachImages(); }).observe(document.documentElement,{childList:true,subtree:true});
-  document.addEventListener('DOMContentLoaded',function(){ replaceWhatsAppButtons(); attachImages(); });
-  setTimeout(function(){ replaceWhatsAppButtons(); attachImages(); },200);
-})();
-</script>`;
-    html = html.replace('</body>', bridge + '</body>');
-    const supabaseBridge = `
+</head>
+<body>
+<div id="loading" style="font-family:Arial;text-align:center;padding:40px">جاري تحميل المتجر...</div>
 <script>
 (async function(){
-  try {
-    const client=window.supabase.createClient('https://ncurbamdczoiafvcnhzd.supabase.co','sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF');
-    const result=await client.from('products').select('*').order('created_at',{ascending:false});
-    if(result.error)throw result.error;
-    if(result.data&&result.data.length){
-      DATA.products = result.data.map(function(p){
-        return {
-          id:String(p.id),
-          cat:p.category || p.cat || 'consumables',
-          name:p.name,
-          desc:p.description || p.desc || '',
-          price:Number(p.price)||0,
-          image_url: p.image_url || ''
-        };
-      });
-      if(typeof renderProducts==='function') renderProducts();
-      if(typeof updateCartUI==='function') updateCartUI();
-    }
-  }catch(error){console.warn('Supabase fallback:',error)}
-})();
-</script>`;
-    html = html.replace('</body>', supabaseBridge + '</body>');
-    document.open(); document.write(html); document.close();
-  } catch (error) { document.body.innerHTML='<p style="font-family:Arial;text-align:center;padding:40px">تعذر تحميل الموقع. حدّث الصفحة مرة أخرى.</p>'; }
+  try{
+    var url='https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/5385e51cdb051b219ae04f71f1115f18ee65164c/index.html';
+    var response=await fetch(url,{cache:'no-store'});
+    if(!response.ok) throw new Error('HTTP '+response.status);
+    var html=await response.text();
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(error){
+    document.getElementById('loading').innerHTML='تعذر تحميل الصفحة. حاول تحديثها مرة أخرى.<br><small>'+error.message+'</small>';
+    console.error(error);
+  }
 })();
 </script>
-</head><body></body></html>
+</body>
+</html>
