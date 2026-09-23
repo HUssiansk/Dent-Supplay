@@ -328,7 +328,9 @@
     <button class="cart-btn" id="openCartBtn" aria-label="السلة">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.2 10.6a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L20.5 8H6"/></svg>
       السلة
-      <span class="cart-count" id="cartCount" style="display:none;">0</span>
+      <span class="cart-count" id="cartCount" style="display:none;document.getElementById("floatingCartCount").textContent = totalQty;
+document.getElementById("floatingCartCount").style.display = totalQty > 0 ? "flex" : "none";">0</span>
+     
     </button>
   </div>
 </header>
