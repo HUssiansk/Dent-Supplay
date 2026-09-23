@@ -296,6 +296,23 @@
     .hero-art svg{max-width:220px;}
     .hero-art img{max-width:100%;}
   }
+ .floating-cart{
+  position:fixed; bottom:24px; right:24px; z-index:70;
+  width:58px; height:58px; border-radius:50%;
+  background:var(--primary); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 24px -6px rgba(28,110,140,.5);
+  border:none;
+}
+.floating-cart svg{width:26px; height:26px;}
+.floating-cart .fcart-count{
+  position:absolute; top:-4px; left:-4px;
+  background:#fff; color:var(--primary);
+  font-size:.7rem; font-weight:900;
+  min-width:20px; height:20px; border-radius:999px;
+  display:flex; align-items:center; justify-content:center;
+  border:2px solid var(--primary);
+}
 </style>
 </head>
 <body>
