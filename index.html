@@ -245,7 +245,7 @@ function categoryImage(items){
 function renderCategoryCards(){
   const groups=getCategoryGroups();
   $('categoryCards').innerHTML=groups.length?groups.map(([name,items])=>{
-    const image=categoryImage(items);
+    const image = categoryImages[name] || items[0]?.image_url || "";
     return `<button class="category-card ${active===name?'active':''}" data-show-cat="${esc(name)}">
       <div class="category-card-media">
         ${image?`<img src="${esc(image)}" alt="${esc(name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">`:''}
