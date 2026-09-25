@@ -242,6 +242,14 @@ function categoryImage(items){
   const p=items.find(x=>x.image);
   return p?.image||'';
 }
+  const categoryImages = {
+  "Composites": "composites.jpg",
+  "Instruments": "instruments.jpg",
+  "Devices": "devices.jpg",
+  "surgical instruments": "surgical-instruments.jpg",
+  "Disposable items": "disposable-items.jpg",
+  "Prosetheice equipment": "prosetheice-equipment.jpg"
+};
 function renderCategoryCards(){
   const groups=getCategoryGroups();
   $('categoryCards').innerHTML=groups.length?groups.map(([name,items])=>{
