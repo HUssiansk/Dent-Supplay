@@ -41,6 +41,11 @@ body{
   box-shadow:0 14px 40px #16323f14
 }
 
+.login-panel{
+  max-width:480px;
+  margin:60px auto
+}
+
 .brand{
   display:flex;
   gap:12px;
@@ -145,6 +150,13 @@ button{
   border:1px solid var(--line)
 }
 
+.logout{
+  background:#fff3f1;
+  color:var(--danger);
+  border:1px solid #f0d8d1;
+  margin-bottom:20px
+}
+
 .status{
   display:none;
   margin-top:16px;
@@ -197,6 +209,10 @@ button{
   margin-top:5px
 }
 
+#adminPanel{
+  display:none
+}
+
 @media(max-width:620px){
   .item{
     display:grid
@@ -215,113 +231,280 @@ button{
 
 <body>
 
-<main class="wrap">
+<!-- =========================
+     LOGIN
+========================= -->
+
+<main class="wrap" id="loginPanel">
+
+<section class="panel login-panel">
+
+<div class="brand">
+
+<span class="mark">
+<svg viewBox="0 0 24 24"
+fill="none"
+stroke-width="1.8"
+stroke-linecap="round"
+stroke-linejoin="round">
+
+<path d="M12 5c-1.6-1.6-4.8-2-6.2-.6C4.1 5.7 4 8.5 5 11c.8 2 1.4 4 1.6 6.2.1 1.4 1 2.3 2 2.3s1.6-1 1.8-2.4c.3-2.2.7-3.8 1.6-3.8s1.3 1.6 1.6 3.8c.2 1.4.8 2.4 1.8 2.4s1.9-.9 2-2.3c.2-2.2.8-4.2 1.6-6.2 1-2.5.9-5.3-.8-6.6C17.8 3 14.6 3.4 13 5"/>
+</svg>
+</span>
+
+<span>
+<strong>Dent Supply</strong>
+<small>لوحة إدارة مستلزمات وأدوات الأسنان</small>
+</span>
+
+</div>
+
+<h1>تسجيل دخول الإدارة</h1>
+
+<p class="sub">
+يجب تسجيل الدخول للوصول إلى لوحة إدارة المنتجات.
+</p>
+
+<form id="loginForm">
+
+<label>
+البريد الإلكتروني
+<input
+  id="loginEmail"
+  type="email"
+  autocomplete="username"
+  required
+>
+</label>
+
+<label>
+كلمة المرور
+<input
+  id="loginPassword"
+  type="password"
+  autocomplete="current-password"
+  required
+>
+</label>
+
+<button
+  class="primary"
+  type="submit"
+>
+دخول
+</button>
+
+</form>
+
+<div
+  id="loginStatus"
+  class="status"
+></div>
+
+</section>
+</main>
+
+
+<!-- =========================
+     ADMIN PANEL
+========================= -->
+
+<main
+  class="wrap"
+  id="adminPanel"
+>
+
 <section class="panel">
 
 <div class="brand">
-  <span class="mark">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 5c-1.6-1.6-4.8-2-6.2-.6C4.1 5.7 4 8.5 5 11c.8 2 1.4 4 1.6 6.2.1 1.4 1 2.3 2 2.3s1.6-1 1.8-2.4c.3-2.2.7-3.8 1.6-3.8s1.3 1.6 1.6 3.8c.2 1.4.8 2.4 1.8 2.4s1.9-.9 2-2.3c.2-2.2.8-4.2 1.6-6.2 1-2.5.9-5.3-.8-6.6C17.8 3 14.6 3.4 13 5"/>
-    </svg>
-  </span>
 
-  <span>
-    <strong>Dent Supply</strong>
-    <small>لوحة إدارة مستلزمات وأدوات الأسنان</small>
-  </span>
+<span class="mark">
+<svg viewBox="0 0 24 24"
+fill="none"
+stroke-width="1.8"
+stroke-linecap="round"
+stroke-linejoin="round">
+
+<path d="M12 5c-1.6-1.6-4.8-2-6.2-.6C4.1 5.7 4 8.5 5 11c.8 2 1.4 4 1.6 6.2.1 1.4 1 2.3 2 2.3s1.6-1 1.8-2.4c.3-2.2.7-3.8 1.6-3.8s1.3 1.6 1.6 3.8c.2 1.4.8 2.4 1.8 2.4s1.9-.9 2-2.3c.2-2.2.8-4.2 1.6-6.2 1-2.5.9-5.3-.8-6.6C17.8 3 14.6 3.4 13 5"/>
+</svg>
+</span>
+
+<span>
+<strong>Dent Supply</strong>
+<small>لوحة إدارة مستلزمات وأدوات الأسنان</small>
+</span>
+
 </div>
+
+<button
+  type="button"
+  class="logout"
+  id="logout"
+>
+تسجيل الخروج
+</button>
 
 <h1>إدارة المنتجات</h1>
 
 <p class="sub">
-  أي منتج تضيفه هنا يظهر في الصفحة الرئيسية عند جميع الزوار.
+أي منتج تضيفه هنا يظهر في الصفحة الرئيسية عند جميع الزوار.
 </p>
+
 
 <form id="form">
 
 <div class="grid">
 
 <label>
-  اسم المنتج
-  <input name="name" required>
+اسم المنتج
+<input
+  name="name"
+  required
+>
 </label>
 
+
 <label>
-  الفئة
-  <select name="category" required>
-    <option value="Composites">Composites</option>
-    <option value="Instruments">Instruments</option>
-    <option value="Devices">Devices</option>
-    <option value="Surgical Instruments">Surgical Instruments</option>
-    <option value="Disposable Items">Disposable Items</option>
-    <option value="Prosthetic Equipment">Prosthetic Equipment</option>
-  </select>
+الفئة
+
+<select
+  name="category"
+  required
+>
+
+<option value="Composites">
+Composites
+</option>
+
+<option value="Instruments">
+Instruments
+</option>
+
+<option value="Devices">
+Devices
+</option>
+
+<option value="Surgical Instruments">
+Surgical Instruments
+</option>
+
+<option value="Disposable Items">
+Disposable Items
+</option>
+
+<option value="Prosthetic Equipment">
+Prosthetic Equipment
+</option>
+
+</select>
+
 </label>
 
+
 <label>
-  السعر (د.ع)
-  <input name="price" type="number" min="0" required>
+السعر (د.ع)
+
+<input
+  name="price"
+  type="number"
+  min="0"
+  required
+>
+
 </label>
 
+
 <label>
-  صورة المنتج
 
-  <input
-    name="image_file"
-    type="file"
-    accept="image/*"
-  >
+صورة المنتج
 
-  <input
-    name="image_url"
-    type="hidden"
-  >
+<input
+  name="image_file"
+  type="file"
+  accept="image/*"
+>
 
-  <small style="color:#4c6673;font-weight:400">
-    اختر صورة من جهازك — الحد الأقصى 5MB
-  </small>
+<input
+  name="image_url"
+  type="hidden"
+>
 
-  <img id="imagePreview" class="preview">
+<small style="color:#4c6673;font-weight:400">
+اختر صورة من جهازك — الحد الأقصى 5MB
+</small>
+
+<img
+  id="imagePreview"
+  class="preview"
+>
+
 </label>
 
 </div>
 
+
 <label>
-  الوصف
-  <textarea name="description"></textarea>
+الوصف
+
+<textarea
+  name="description"
+></textarea>
+
 </label>
 
-<div class="actions">
-  <button class="primary" type="submit">
-    حفظ المنتج
-  </button>
 
-  <button
-    type="button"
-    class="secondary"
-    id="clear"
-  >
-    مسح الحقول
-  </button>
+<div class="actions">
+
+<button
+  class="primary"
+  type="submit"
+>
+حفظ المنتج
+</button>
+
+<button
+  type="button"
+  class="secondary"
+  id="clear"
+>
+مسح الحقول
+</button>
+
 </div>
 
 </form>
 
-<div id="status" class="status"></div>
-<div id="list" class="list"></div>
+
+<div
+  id="status"
+  class="status"
+></div>
+
+<div
+  id="list"
+  class="list"
+></div>
 
 </section>
 </main>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-const SUPA_URL='https://ncurbamdczoiafvcnhzd.supabase.co';
+/* =========================
+   SUPABASE
+========================= */
 
-const KEY='sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF';
+const SUPA_URL=
+'https://ncurbamdczoiafvcnhzd.supabase.co';
 
-const db=window.supabase.createClient(
+const KEY=
+'sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF';
+
+const db=
+window.supabase.createClient(
   SUPA_URL,
   KEY
 );
@@ -331,7 +514,8 @@ const db=window.supabase.createClient(
    STORAGE
 ========================= */
 
-const STORAGE_BUCKET='product-images';
+const STORAGE_BUCKET=
+'product-images';
 
 
 async function uploadProductImage(file){
@@ -341,10 +525,19 @@ async function uploadProductImage(file){
   }
 
   if(file.size > 5 * 1024 * 1024){
-    throw new Error('حجم الصورة يجب أن يكون أقل من 5MB');
+
+    throw new Error(
+      'حجم الصورة يجب أن يكون أقل من 5MB'
+    );
+
   }
 
-  const ext=(file.name.split('.').pop() || 'jpg').toLowerCase();
+  const ext=
+    (
+      file.name.split('.').pop() ||
+      'jpg'
+    ).toLowerCase();
+
 
   const allowed=[
     'jpg',
@@ -354,9 +547,15 @@ async function uploadProductImage(file){
     'gif'
   ];
 
+
   if(!allowed.includes(ext)){
-    throw new Error('نوع الصورة غير مدعوم');
+
+    throw new Error(
+      'نوع الصورة غير مدعوم'
+    );
+
   }
+
 
   const fileName=
     `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
@@ -364,18 +563,19 @@ async function uploadProductImage(file){
 
   const {
     error:uploadError
-  }=await db
-    .storage
-    .from(STORAGE_BUCKET)
-    .upload(
-      fileName,
-      file,
-      {
-        cacheControl:'3600',
-        upsert:false,
-        contentType:file.type
-      }
-    );
+  }=
+    await db
+      .storage
+      .from(STORAGE_BUCKET)
+      .upload(
+        fileName,
+        file,
+        {
+          cacheControl:'3600',
+          upsert:false,
+          contentType:file.type
+        }
+      );
 
 
   if(uploadError){
@@ -383,16 +583,167 @@ async function uploadProductImage(file){
   }
 
 
-  const {
-    data
-  }=db
-    .storage
-    .from(STORAGE_BUCKET)
-    .getPublicUrl(fileName);
+  const {data}=
+    db
+      .storage
+      .from(STORAGE_BUCKET)
+      .getPublicUrl(fileName);
 
 
   return data.publicUrl;
 }
+
+
+/* =========================
+   AUTH UI
+========================= */
+
+const loginPanel=
+  document.querySelector('#loginPanel');
+
+const adminPanel=
+  document.querySelector('#adminPanel');
+
+const loginForm=
+  document.querySelector('#loginForm');
+
+const loginStatus=
+  document.querySelector('#loginStatus');
+
+
+function loginMessage(
+  text,
+  bad=false
+){
+
+  loginStatus.textContent=text;
+
+  loginStatus.className=
+    'status show';
+
+  loginStatus.style.color=
+    bad ? '#b3543f' : '#16865b';
+
+  loginStatus.style.background=
+    bad ? '#fff3f1' : '#edf8f2';
+}
+
+
+function showAdmin(){
+
+  loginPanel.style.display='none';
+
+  adminPanel.style.display='block';
+
+  load();
+}
+
+
+function showLogin(){
+
+  adminPanel.style.display='none';
+
+  loginPanel.style.display='block';
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+loginForm.addEventListener(
+  'submit',
+  async e=>{
+
+    e.preventDefault();
+
+    const email=
+      document.querySelector(
+        '#loginEmail'
+      ).value.trim();
+
+    const password=
+      document.querySelector(
+        '#loginPassword'
+      ).value;
+
+
+    loginMessage(
+      'جاري تسجيل الدخول...'
+    );
+
+
+    const {
+      error
+    }=
+      await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+
+    if(error){
+
+      loginMessage(
+        'فشل تسجيل الدخول: '+
+        error.message,
+        true
+      );
+
+      return;
+    }
+
+
+    loginForm.reset();
+
+    loginMessage('');
+
+  }
+);
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+document
+  .querySelector('#logout')
+  .addEventListener(
+    'click',
+    async()=>{
+
+      await db.auth.signOut();
+
+      showLogin();
+
+      loginMessage(
+        'تم تسجيل الخروج.'
+      );
+
+    }
+  );
+
+
+/* =========================
+   AUTH STATE
+========================= */
+
+db.auth.onAuthStateChange(
+  (event,session)=>{
+
+    if(session){
+
+      showAdmin();
+
+    }else{
+
+      showLogin();
+
+    }
+
+  }
+);
 
 
 /* =========================
@@ -410,15 +761,29 @@ const CATEGORIES=[
 
 
 const OLD_CATEGORY_MAP={
+
   exam:'Instruments',
+
   fill:'Composites',
+
   surgery:'Surgical Instruments',
+
   clean:'Instruments',
+
   consumables:'Disposable Items',
-  'surgical instruments':'Surgical Instruments',
-  'Disposable items':'Disposable Items',
-  'Prosetheice equipment':'Prosthetic Equipment',
-  'Prostheice equipment':'Prosthetic Equipment'
+
+  'surgical instruments':
+    'Surgical Instruments',
+
+  'Disposable items':
+    'Disposable Items',
+
+  'Prosetheice equipment':
+    'Prosthetic Equipment',
+
+  'Prostheice equipment':
+    'Prosthetic Equipment'
+
 };
 
 
@@ -429,129 +794,129 @@ const OLD_CATEGORY_MAP={
 const DEFAULT_PRODUCTS=[
 
 {
-  id:'p1',
-  category:'Instruments',
-  name:'مسبر أسنان مزدوج',
-  description:'مسبر فحص دقيق من ستانلس ستيل طبي.',
-  price:8500,
-  image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p1.jpg'
+id:'p1',
+category:'Instruments',
+name:'مسبر أسنان مزدوج',
+description:'مسبر فحص دقيق من ستانلس ستيل طبي.',
+price:8500,
+image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p1.jpg'
 },
 
 {
-  id:'p2',
-  category:'Instruments',
-  name:'مرآة فحص فم رقم 5',
-  description:'مرآة عاكسة بجودة عالية ومقبض مريح.',
-  price:6000,
-  image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p2.jpg'
+id:'p2',
+category:'Instruments',
+name:'مرآة فحص فم رقم 5',
+description:'مرآة عاكسة بجودة عالية ومقبض مريح.',
+price:6000,
+image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p2.jpg'
 },
 
 {
-  id:'p3',
-  category:'Instruments',
-  name:'ملقط فحص أسنان',
-  description:'ملقط دقيق لإمساك القطن والمواد أثناء الفحص.',
-  price:7000,
-  image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p3.jpg'
+id:'p3',
+category:'Instruments',
+name:'ملقط فحص أسنان',
+description:'ملقط دقيق لإمساك القطن والمواد أثناء الفحص.',
+price:7000,
+image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p3.jpg'
 },
 
 {
-  id:'p4',
-  category:'Composites',
-  name:'طقم أدوات حشو مركب',
-  description:'طقم كامل لوضع وتشكيل الحشوات التجميلية.',
-  price:32000,
-  image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p4.webp'
+id:'p4',
+category:'Composites',
+name:'طقم أدوات حشو مركب',
+description:'طقم كامل لوضع وتشكيل الحشوات التجميلية.',
+price:32000,
+image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p4.webp'
 },
 
 {
-  id:'p5',
-  category:'Composites',
-  name:'سباتيولا خلط الحشوة',
-  description:'مقاس مزدوج لخلط مواد الحشو والسمنت.',
-  price:9500,
-  image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p5.jpg'
+id:'p5',
+category:'Composites',
+name:'سباتيولا خلط الحشوة',
+description:'مقاس مزدوج لخلط مواد الحشو والسمنت.',
+price:9500,
+image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p5.jpg'
 },
 
 {
-  id:'p6',
-  category:'Composites',
-  name:'أداة كاربر لتشكيل الحشو',
-  description:'طرفين للنحت الدقيق قبل التصلب.',
-  price:11000,
-  image_url:''
+id:'p6',
+category:'Composites',
+name:'أداة كاربر لتشكيل الحشو',
+description:'طرفين للنحت الدقيق قبل التصلب.',
+price:11000,
+image_url:''
 },
 
 {
-  id:'p7',
-  category:'Surgical Instruments',
-  name:'ملقط قلع أضراس علوي',
-  description:'ستانلس ستيل جراحي معتمد ومريح.',
-  price:45000,
-  image_url:''
+id:'p7',
+category:'Surgical Instruments',
+name:'ملقط قلع أضراس علوي',
+description:'ستانلس ستيل جراحي معتمد ومريح.',
+price:45000,
+image_url:''
 },
 
 {
-  id:'p8',
-  category:'Surgical Instruments',
-  name:'مبعد أنسجة جراحي',
-  description:'لإبعاد اللثة أثناء العمليات البسيطة.',
-  price:21000,
-  image_url:''
+id:'p8',
+category:'Surgical Instruments',
+name:'مبعد أنسجة جراحي',
+description:'لإبعاد اللثة أثناء العمليات البسيطة.',
+price:21000,
+image_url:''
 },
 
 {
-  id:'p9',
-  category:'Surgical Instruments',
-  name:'مشرط جراحي بشفرات بديلة',
-  description:'مقبض قابل لإعادة الاستخدام مع شفرات معقمة.',
-  price:15500,
-  image_url:''
+id:'p9',
+category:'Surgical Instruments',
+name:'مشرط جراحي بشفرات بديلة',
+description:'مقبض قابل لإعادة الاستخدام مع شفرات معقمة.',
+price:15500,
+image_url:''
 },
 
 {
-  id:'p10',
-  category:'Instruments',
-  name:'مقياس تارتار وتنظيف',
-  description:'طرفين لإزالة الجير من السطح.',
-  price:13000,
-  image_url:''
+id:'p10',
+category:'Instruments',
+name:'مقياس تارتار وتنظيف',
+description:'طرفين لإزالة الجير من السطح.',
+price:13000,
+image_url:''
 },
 
 {
-  id:'p11',
-  category:'Instruments',
-  name:'طقم تلميع الأسنان',
-  description:'كؤوس تلميع مطاطية بثلاث درجات خشونة.',
-  price:17000,
-  image_url:''
+id:'p11',
+category:'Instruments',
+name:'طقم تلميع الأسنان',
+description:'كؤوس تلميع مطاطية بثلاث درجات خشونة.',
+price:17000,
+image_url:''
 },
 
 {
-  id:'p12',
-  category:'Disposable Items',
-  name:'قفازات فحص لاتكس',
-  description:'صندوق 100 قفاز، مقاسات متعددة.',
-  price:12000,
-  image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p12.jpg'
+id:'p12',
+category:'Disposable Items',
+name:'قفازات فحص لاتكس',
+description:'صندوق 100 قفاز، مقاسات متعددة.',
+price:12000,
+image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p12.jpg'
 },
 
 {
-  id:'p13',
-  category:'Disposable Items',
-  name:'كمامات طبية ثلاثية الطبقات',
-  description:'صندوق 50 كمامة معتمدة طبياً.',
-  price:8000,
-  image_url:''
+id:'p13',
+category:'Disposable Items',
+name:'كمامات طبية ثلاثية الطبقات',
+description:'صندوق 50 كمامة معتمدة طبياً.',
+price:8000,
+image_url:''
 },
 
 {
-  id:'p14',
-  category:'Disposable Items',
-  name:'لفافات قطن طبي للفم',
-  description:'عبوة 100 قطعة، امتصاص عالي.',
-  price:4500,
-  image_url:''
+id:'p14',
+category:'Disposable Items',
+name:'لفافات قطن طبي للفم',
+description:'عبوة 100 قطعة، امتصاص عالي.',
+price:4500,
+image_url:''
 }
 
 ];
@@ -563,15 +928,21 @@ const DEFAULT_PRODUCTS=[
 
 let editing=null;
 
-const $=s=>document.querySelector(s);
+const $=
+  s=>document.querySelector(s);
 
-const form=$('#form');
+const form=
+  $('#form');
 
 const imageFileInput=
-  form.querySelector('[name="image_file"]');
+  form.querySelector(
+    '[name="image_file"]'
+  );
 
 const imageUrlInput=
-  form.querySelector('[name="image_url"]');
+  form.querySelector(
+    '[name="image_url"]'
+  );
 
 const imagePreview=
   $('#imagePreview');
@@ -581,19 +952,25 @@ const imagePreview=
    STATUS
 ========================= */
 
-function status(t,bad=false){
+function status(
+  text,
+  bad=false
+){
 
-  const e=$('#status');
+  const e=
+    $('#status');
 
-  e.textContent=t;
+  e.textContent=text;
 
-  e.className='status show';
+  e.className=
+    'status show';
 
   e.style.color=
     bad ? '#b3543f' : '#16865b';
 
   e.style.background=
     bad ? '#fff3f1' : '#edf8f2';
+
 }
 
 
@@ -603,11 +980,19 @@ function status(t,bad=false){
 
 function mapCategory(category){
 
-  if(CATEGORIES.includes(category)){
+  if(
+    CATEGORIES.includes(category)
+  ){
+
     return category;
+
   }
 
-  return OLD_CATEGORY_MAP[category] || 'Instruments';
+  return(
+    OLD_CATEGORY_MAP[category] ||
+    'Instruments'
+  );
+
 }
 
 
@@ -642,6 +1027,7 @@ function normalize(p){
       p.image_url || ''
 
   };
+
 }
 
 
@@ -656,45 +1042,56 @@ async function seedProducts(){
     const {
       data:rows,
       error:getErr
-    }=await db
-      .from('products')
-      .select('id');
+    }=
+      await db
+        .from('products')
+        .select('id');
+
 
     if(getErr){
       throw getErr;
     }
 
-    if(rows && rows.length){
+
+    if(
+      rows &&
+      rows.length
+    ){
+
       return;
+
     }
 
 
     const payload=
-      DEFAULT_PRODUCTS.map(p=>({
+      DEFAULT_PRODUCTS.map(
+        p=>({
 
-        id:p.id,
+          id:p.id,
 
-        name:p.name,
+          name:p.name,
 
-        category:p.category,
+          category:p.category,
 
-        description:p.description,
+          description:p.description,
 
-        price:p.price,
+          price:p.price,
 
-        image_url:p.image_url,
+          image_url:p.image_url,
 
-        created_at:
-          new Date().toISOString()
+          created_at:
+            new Date().toISOString()
 
-      }));
+        })
+      );
 
 
     const {
       error:insertErr
-    }=await db
-      .from('products')
-      .insert(payload);
+    }=
+      await db
+        .from('products')
+        .insert(payload);
 
 
     if(insertErr){
@@ -705,6 +1102,7 @@ async function seedProducts(){
     status(
       'تمت إضافة المنتجات الأساسية إلى قاعدة البيانات.'
     );
+
 
   }catch(err){
 
@@ -735,15 +1133,16 @@ async function load(){
     const {
       data,
       error
-    }=await db
-      .from('products')
-      .select('*')
-      .order(
-        'created_at',
-        {
-          ascending:false
-        }
-      );
+    }=
+      await db
+        .from('products')
+        .select('*')
+        .order(
+          'created_at',
+          {
+            ascending:false
+          }
+        );
 
 
     if(error){
@@ -755,11 +1154,13 @@ async function load(){
       );
 
       return;
+
     }
 
 
     render(
-      (data || []).map(normalize)
+      (data || [])
+        .map(normalize)
     );
 
 
@@ -787,7 +1188,8 @@ function render(items){
 
     ?
 
-    items.map(p=>`
+    items.map(
+      p=>`
 
       <div class="item">
 
@@ -826,7 +1228,8 @@ function render(items){
 
       </div>
 
-    `).join('')
+      `
+    ).join('')
 
     :
 
@@ -845,11 +1248,13 @@ function escapeHtml(value){
     .replace(
       /[&<>"']/g,
       m=>({
+
         '&':'&amp;',
         '<':'&lt;',
         '>':'&gt;',
         '"':'&quot;',
         "'":'&#039;'
+
       }[m])
     );
 
@@ -894,17 +1299,23 @@ imageFileInput.addEventListener(
     const file=
       imageFileInput.files?.[0];
 
+
     if(!file){
 
       imagePreview.src='';
 
-      imagePreview.style.display='none';
+      imagePreview.style.display=
+        'none';
 
       return;
+
     }
 
 
-    if(file.size > 5 * 1024 * 1024){
+    if(
+      file.size >
+      5 * 1024 * 1024
+    ){
 
       status(
         'حجم الصورة يجب أن يكون أقل من 5MB',
@@ -914,6 +1325,7 @@ imageFileInput.addEventListener(
       imageFileInput.value='';
 
       return;
+
     }
 
 
@@ -921,14 +1333,16 @@ imageFileInput.addEventListener(
       new FileReader();
 
 
-    reader.onload=event=>{
+    reader.onload=
+      event=>{
 
-      imagePreview.src=
-        event.target.result;
+        imagePreview.src=
+          event.target.result;
 
-      imagePreview.style.display='block';
+        imagePreview.style.display=
+          'block';
 
-    };
+      };
 
 
     reader.readAsDataURL(file);
@@ -938,7 +1352,7 @@ imageFileInput.addEventListener(
 
 
 /* =========================
-   SAVE PRODUCT
+   SAVE
 ========================= */
 
 form.addEventListener(
@@ -953,7 +1367,8 @@ form.addEventListener(
 
 
     const file=
-      imageFileInput.files?.[0] || null;
+      imageFileInput.files?.[0] ||
+      null;
 
 
     const name=
@@ -970,6 +1385,7 @@ form.addEventListener(
       );
 
       return;
+
     }
 
 
@@ -978,8 +1394,6 @@ form.addEventListener(
         f.get('image_url') || ''
       ).trim();
 
-
-    /* رفع الصورة الجديدة */
 
     if(file){
 
@@ -991,7 +1405,9 @@ form.addEventListener(
 
 
         imageUrl=
-          await uploadProductImage(file);
+          await uploadProductImage(
+            file
+          );
 
 
       }catch(err){
@@ -1005,6 +1421,7 @@ form.addEventListener(
         );
 
         return;
+
       }
 
     }
@@ -1043,7 +1460,10 @@ form.addEventListener(
         await db
           .from('products')
           .update(row)
-          .eq('id',editing);
+          .eq(
+            'id',
+            editing
+          );
 
     }else{
 
@@ -1054,7 +1474,8 @@ form.addEventListener(
 
             ...row,
 
-            id:'p'+Date.now(),
+            id:
+              'p'+Date.now(),
 
             created_at:
               new Date().toISOString()
@@ -1073,6 +1494,7 @@ form.addEventListener(
       );
 
       return;
+
     }
 
 
@@ -1100,27 +1522,30 @@ $('#list').addEventListener(
   async e=>{
 
     const edit=
-      e.target.closest('[data-edit]');
+      e.target.closest(
+        '[data-edit]'
+      );
 
     const del=
-      e.target.closest('[data-delete]');
+      e.target.closest(
+        '[data-delete]'
+      );
 
-
-    /* تعديل */
 
     if(edit){
 
       const {
         data,
         error
-      }=await db
-        .from('products')
-        .select('*')
-        .eq(
-          'id',
-          edit.dataset.edit
-        )
-        .single();
+      }=
+        await db
+          .from('products')
+          .select('*')
+          .eq(
+            'id',
+            edit.dataset.edit
+          )
+          .single();
 
 
       if(error){
@@ -1131,6 +1556,7 @@ $('#list').addEventListener(
         );
 
         return;
+
       }
 
 
@@ -1153,8 +1579,6 @@ $('#list').addEventListener(
       form.description.value=
         p.description;
 
-
-      /* الاحتفاظ بصورة المنتج الحالية */
 
       imageUrlInput.value=
         p.image_url;
@@ -1189,8 +1613,6 @@ $('#list').addEventListener(
     }
 
 
-    /* حذف */
-
     if(
       del &&
       confirm('حذف المنتج؟')
@@ -1198,13 +1620,14 @@ $('#list').addEventListener(
 
       const {
         error
-      }=await db
-        .from('products')
-        .delete()
-        .eq(
-          'id',
-          del.dataset.delete
-        );
+      }=
+        await db
+          .from('products')
+          .delete()
+          .eq(
+            'id',
+            del.dataset.delete
+          );
 
 
       if(error){
@@ -1232,7 +1655,7 @@ $('#list').addEventListener(
 
 
 /* =========================
-   CLEAR BUTTON
+   CLEAR
 ========================= */
 
 $('#clear').onclick=clear;
@@ -1244,7 +1667,30 @@ $('#clear').onclick=clear;
 
 clear();
 
-load();
+
+/*
+  نتحقق من جلسة Supabase الحالية.
+*/
+
+(async()=>{
+
+  const {
+    data
+  }=
+    await db.auth.getSession();
+
+
+  if(data.session){
+
+    showAdmin();
+
+  }else{
+
+    showLogin();
+
+  }
+
+})();
 
 </script>
 
