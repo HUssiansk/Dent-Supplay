@@ -1,301 +1,131 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>إدارة Dent Supply</title>
+
 <style>
-:root{--bg:#f4f8fb;--panel:#fff;--ink:#16323f;--soft:#4c6673;--primary:#1c6e8c;--dark:#124a5f;--line:#dfeaf0;--ok:#16865b;--danger:#b3543f}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Segoe UI,Tahoma,sans-serif}
-.wrap{max-width:1000px;margin:auto;padding:28px 16px 60px}.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 14px 40px #16323f14}
-.brand{display:flex;gap:12px;align-items:center;color:var(--dark);margin-bottom:18px}.mark{width:48px;height:48px;border-radius:14px;background:var(--primary);display:grid;place-items:center}.mark svg{width:28px;stroke:#fff}
-.brand strong{display:block;font-size:1.15rem}.brand small{color:var(--soft)}h1{margin:0 0 10px;color:var(--dark)}.sub{margin:0 0 20px;color:var(--soft)}
-form{display:grid;gap:14px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-label{display:grid;gap:7px;font-weight:700}input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fbfdff;font:inherit;color:var(--ink)}
-textarea{min-height:100px;resize:vertical}.actions{display:flex;gap:10px;flex-wrap:wrap}button{border:0;border-radius:11px;padding:11px 16px;font:inherit;font-weight:800;cursor:pointer}
-.primary{background:var(--primary);color:#fff}.secondary,.mini{background:var(--bg);color:var(--dark);border:1px solid var(--line)}
-.status{display:none;margin-top:16px;padding:12px;border-radius:11px;font-weight:700}.status.show{display:block}
-.list{display:grid;gap:10px;margin-top:24px}.item{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:13px;padding:14px}
-.item strong,.item small{display:block}.item small{color:var(--soft)}.danger{background:#fff3f1;color:var(--danger);border:1px solid #f0d8d1}
-@media(max-width:620px){.item{display:grid}.item-actions{display:flex}.item-actions button{flex:1}}
-</style>
-</head>
-<body>
-<main class="wrap"><section class="panel">
-<div class="brand"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c-1.6-1.6-4.8-2-6.2-.6C4.1 5.7 4 8.5 5 11c.8 2 1.4 4 1.6 6.2.1 1.4 1 2.3 2 2.3s1.6-1 1.8-2.4c.3-2.2.7-3.8 1.6-3.8s1.3 1.6 1.6 3.8c.2 1.4.8 2.4 1.8 2.4s1.9-.9 2-2.3c.2-2.2.8-4.2 1.6-6.2 1-2.5.9-5.3-.8-6.6C17.8 3 14.6 3.4 13 5"/></svg></span>
-<span><strong>Dent Supply</strong><small>لوحة إدارة مستلزمات وأدوات الأسنان</small></span></div>
-<h1>إدارة المنتجات</h1><p class="sub">أي منتج تضيفه هنا يظهر في الصفحة الرئيسية عند جميع الزوار.</p>
-
-<form id="form">
-<div class="grid">
-<label>اسم المنتج<input name="name" required></label>
-<label>الفئة
-<select name="category" required>
-<option value="Composites">Composites</option>
-<option value="Instruments">Instruments</option>
-<option value="Devices">Devices</option>
-<option value="Surgical Instruments">Surgical Instruments</option>
-<option value="Disposable Items">Disposable Items</option>
-<option value="Prosthetic Equipment">Prosthetic Equipment</option>
-</select>
-</label>
-<label>السعر (د.ع)<input name="price" type="number" min="0" required></label>
-<label>
-  صورة المنتج
-  <input name="image_file" type="file" accept="image/*">
-  <small style="color:#4c6673;font-weight:400">
-    اختر صورة من جهازك
-  </small>
-</label>
-</div>
-<label>الوصف<textarea name="description"></textarea></label>
-<div class="actions"><button class="primary">حفظ المنتج</button><button type="button" class="secondary" id="clear">مسح الحقول</button></div>
-</form>
-
-<div id="status" class="status"></div><div id="list" class="list"></div>
-</section></main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPA_URL='https://ncurbamdczoiafvcnhzd.supabase.co';
-const KEY='sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF';
-const db=window.supabase.createClient(SUPA_URL,KEY);
-const STORAGE_BUCKET = 'product-images';
-
-async function uploadProductImage(file){
-  if(!file) return '';
-
-  if(file.size > 5 * 1024 * 1024){
-    throw new Error('حجم الصورة يجب أن يكون أقل من 5MB');
-  }
-
-  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-  const allowed = ['jpg','jpeg','png','webp','gif'];
-
-  if(!allowed.includes(ext)){
-    throw new Error('نوع الصورة غير مدعوم');
-  }
-
-  const fileName =
-    `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-
-  const { error: uploadError } = await db
-    .storage
-    .from(STORAGE_BUCKET)
-    .upload(fileName, file, {
-      cacheControl: '3600',
-      upsert: false,
-      contentType: file.type
-    });
-
-  if(uploadError) throw uploadError;
-
-  const { data } = db
-    .storage
-    .from(STORAGE_BUCKET)
-    .getPublicUrl(fileName);
-
-  return data.publicUrl;
-}
-const CATEGORIES=[
-  'Composites',
-  'Instruments',
-  'Devices',
-  'Surgical Instruments',
-  'Disposable Items',
-  'Prosthetic Equipment'
-];
-
-const OLD_CATEGORY_MAP={
-  exam:'Instruments',
-  fill:'Composites',
-  surgery:'Surgical Instruments',
-  clean:'Instruments',
-  consumables:'Disposable Items',
-  'surgical instruments':'Surgical Instruments',
-  'Disposable items':'Disposable Items',
-  'Prosetheice equipment':'Prosthetic Equipment',
-  'Prostheice equipment':'Prosthetic Equipment'
-};
-
-const DEFAULT_PRODUCTS=[
-  {id:'p1',category:'Instruments',name:'مسبر أسنان مزدوج',description:'مسبر فحص دقيق من ستانلس ستيل طبي.',price:8500,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p1.jpg'},
-  {id:'p2',category:'Instruments',name:'مرآة فحص فم رقم 5',description:'مرآة عاكسة بجودة عالية ومقبض مريح.',price:6000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p2.jpg'},
-  {id:'p3',category:'Instruments',name:'ملقط فحص أسنان',description:'ملقط دقيق لإمساك القطن والمواد أثناء الفحص.',price:7000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p3.jpg'},
-  {id:'p4',category:'Composites',name:'طقم أدوات حشو مركب',description:'طقم كامل لوضع وتشكيل الحشوات التجميلية.',price:32000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p4.webp'},
-  {id:'p5',category:'Composites',name:'سباتيولا خلط الحشوة',description:'مقاس مزدوج لخلط مواد الحشو والسمنت.',price:9500,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p5.jpg'},
-  {id:'p6',category:'Composites',name:'أداة كاربر لتشكيل الحشو',description:'طرفين للنحت الدقيق قبل التصلب.',price:11000,image_url:''},
-  {id:'p7',category:'Surgical Instruments',name:'ملقط قلع أضراس علوي',description:'ستانلس ستيل جراحي معتمد ومريح.',price:45000,image_url:''},
-  {id:'p8',category:'Surgical Instruments',name:'مبعد أنسجة جراحي',description:'لإبعاد اللثة أثناء العمليات البسيطة.',price:21000,image_url:''},
-  {id:'p9',category:'Surgical Instruments',name:'مشرط جراحي بشفرات بديلة',description:'مقبض قابل لإعادة الاستخدام مع شفرات معقمة.',price:15500,image_url:''},
-  {id:'p10',category:'Instruments',name:'مقياس تارتار وتنظيف',description:'طرفين لإزالة الجير من السطح.',price:13000,image_url:''},
-  {id:'p11',category:'Instruments',name:'طقم تلميع الأسنان',description:'كؤوس تلميع مطاطية بثلاث درجات خشونة.',price:17000,image_url:''},
-  {id:'p12',category:'Disposable Items',name:'قفازات فحص لاتكس',description:'صندوق 100 قفاز، مقاسات متعددة.',price:12000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p12.jpg'},
-  {id:'p13',category:'Disposable Items',name:'كمامات طبية ثلاثية الطبقات',description:'صندوق 50 كمامة معتمدة طبياً.',price:8000,image_url:''},
-  {id:'p14',category:'Disposable Items',name:'لفافات قطن طبي للفم',description:'عبوة 100 قطعة، امتصاص عالي.',price:4500,image_url:''}
-];
-
-let editing=null;
-const $=s=>document.querySelector(s);
-const form=$('#form');
-
-function status(t,bad=false){
-  const e=$('#status');
-  e.textContent=t;
-  e.className='status show';
-  e.style.color=bad?'#b3543f':'#16865b';
-  e.style.background=bad?'#fff3f1':'#edf8f2';
+:root{
+  --bg:#f4f8fb;
+  --panel:#fff;
+  --ink:#16323f;
+  --soft:#4c6673;
+  --primary:#1c6e8c;
+  --dark:#124a5f;
+  --line:#dfeaf0;
+  --ok:#16865b;
+  --danger:#b3543f
 }
 
-function mapCategory(category){
-  if(CATEGORIES.includes(category)) return category;
-  return OLD_CATEGORY_MAP[category] || 'Instruments';
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Segoe UI,Tahoma,sans-serif
 }
 
-function normalize(p){
-  return {
-    id:p.id,
-    name:p.name||'',
-    category:mapCategory(p.category||p.cat||'Instruments'),
-    description:p.description||p.desc||'',
-    price:Number(p.price)||0,
-    image_url:p.image_url||''
-  };
+.wrap{
+  max-width:1000px;
+  margin:auto;
+  padding:28px 16px 60px
 }
 
-async function seedProducts(){
-  try{
-    const {data:rows,error:getErr}=await db.from('products').select('id');
-    if(getErr) throw getErr;
-    if(rows && rows.length) return;
-
-    const payload=DEFAULT_PRODUCTS.map(p=>({
-      id:p.id,
-      name:p.name,
-      category:p.category,
-      description:p.description,
-      price:p.price,
-      image_url:p.image_url,
-      created_at:new Date().toISOString()
-    }));
-
-    const {error:insertErr}=await db.from('products').insert(payload);
-    if(insertErr) throw insertErr;
-    status('تمت إضافة المنتجات الأساسية إلى قاعدة البيانات.');
-  }catch(err){
-    console.error(err);
-    status('تعذر تهيئة المنتجات الأساسية: '+(err.message||err),true);
-  }
+.panel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:24px;
+  box-shadow:0 14px 40px #16323f14
 }
 
-async function load(){
-  try{
-    await seedProducts();
-    const {data,error}=await db.from('products').select('*').order('created_at',{ascending:false});
-    if(error){
-      status('تعذر قراءة المنتجات من Supabase: '+error.message,true);
-      return;
-    }
-    render((data||[]).map(normalize));
-  }catch(err){
-    status('تعذر تحميل المنتجات: '+(err.message||err),true);
-  }
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  color:var(--dark);
+  margin-bottom:18px
 }
 
-function render(items){
-  $('#list').innerHTML=items.length
-    ?items.map(p=>`<div class="item">
-      <div><strong>${escapeHtml(p.name)}</strong>
-      <small>${escapeHtml(p.category)} • ${p.price.toLocaleString('ar-IQ')} د.ع</small></div>
-      <div class="item-actions">
-        <button class="mini" data-edit="${escapeHtml(p.id)}">تعديل</button>
-        <button class="mini danger" data-delete="${escapeHtml(p.id)}">حذف</button>
-      </div>
-    </div>`).join('')
-    :'<div class="item">لا توجد منتجات في قاعدة البيانات.</div>';
+.mark{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:var(--primary);
+  display:grid;
+  place-items:center
 }
 
-function escapeHtml(value){
-  return String(value??'').replace(/[&<>"']/g,m=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
-  }[m]));
+.mark svg{
+  width:28px;
+  stroke:#fff
 }
 
-function clear(){
-  form.reset();
-  editing=null;
-  form.querySelector('[name=category]').value='Instruments';
-  form.querySelector('[name=price]').value='';
+.brand strong{
+  display:block;
+  font-size:1.15rem
 }
 
-form.addEventListener('submit',async e=>{
-  e.preventDefault();
+.brand small{
+  color:var(--soft)
+}
 
-  const f=new FormData(form);
-  const row={
-    name:String(f.get('name')||'').trim(),
-    category:mapCategory(f.get('category')),
-    description:String(f.get('description')||'').trim(),
-    price:Number(f.get('price')||0),
-    image_url:String(f.get('image_url')||'').trim()
-  };
+h1{
+  margin:0 0 10px;
+  color:var(--dark)
+}
 
-  if(!row.name){
-    status('اكتب اسم المنتج.',true);
-    return;
-  }
+.sub{
+  margin:0 0 20px;
+  color:var(--soft)
+}
 
-  let result;
-  if(editing){
-    result=await db.from('products').update(row).eq('id',editing);
-  }else{
-    result=await db.from('products').insert({...row,id:'p'+Date.now()});
-  }
+form{
+  display:grid;
+  gap:14px
+}
 
-  if(result.error){
-    status('فشل الحفظ: '+result.error.message,true);
-    return;
-  }
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px
+}
 
-  status(editing?'تم تحديث المنتج.':'تمت إضافة المنتج.');
-  clear();
-  load();
-});
+label{
+  display:grid;
+  gap:7px;
+  font-weight:700
+}
 
-$('#list').addEventListener('click',async e=>{
-  const edit=e.target.closest('[data-edit]');
-  const del=e.target.closest('[data-delete]');
+input,select,textarea{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fbfdff;
+  font:inherit;
+  color:var(--ink)
+}
 
-  if(edit){
-    const {data,error}=await db.from('products').select('*').eq('id',edit.dataset.edit).single();
-    if(error){
-      status(error.message,true);
-      return;
-    }
+input[type="file"]{
+  cursor:pointer;
+  padding:10px
+}
 
-    const p=normalize(data);
-    editing=p.id;
-    form.name.value=p.name;
-    form.category.value=p.category;
-    form.price.value=p.price;
-    form.description.value=p.description;
-    form.image_url.value=p.image_url;
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
+textarea{
+  min-height:100px;
+  resize:vertical
+}
 
-  if(del && confirm('حذف المنتج؟')){
-    const {error}=await db.from('products').delete().eq('id',del.dataset.delete);
-    if(error){
-      status('فشل الحذف: '+error.message,true);
-    }else{
-      status('تم حذف المنتج.');
-      load();
-    }
-  }
-});
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap
+}
 
-$('#clear').onclick=clear;
-clear();
-load();
-</script>
-</body>
-</html>
+button{
+  border:0;
+  border-radius:11px;
+  padding:
