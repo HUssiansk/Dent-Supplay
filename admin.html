@@ -59,7 +59,43 @@ textarea{min-height:100px;resize:vertical}.actions{display:flex;gap:10px;flex-wr
 const SUPA_URL='https://ncurbamdczoiafvcnhzd.supabase.co';
 const KEY='sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF';
 const db=window.supabase.createClient(SUPA_URL,KEY);
+const STORAGE_BUCKET = 'product-images';
 
+async function uploadProductImage(file){
+  if(!file) return '';
+
+  if(file.size > 5 * 1024 * 1024){
+    throw new Error('حجم الصورة يجب أن يكون أقل من 5MB');
+  }
+
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const allowed = ['jpg','jpeg','png','webp','gif'];
+
+  if(!allowed.includes(ext)){
+    throw new Error('نوع الصورة غير مدعوم');
+  }
+
+  const fileName =
+    `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+  const { error: uploadError } = await db
+    .storage
+    .from(STORAGE_BUCKET)
+    .upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type
+    });
+
+  if(uploadError) throw uploadError;
+
+  const { data } = db
+    .storage
+    .from(STORAGE_BUCKET)
+    .getPublicUrl(fileName);
+
+  return data.publicUrl;
+}
 const CATEGORIES=[
   'Composites',
   'Instruments',
