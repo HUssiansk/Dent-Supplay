@@ -6,1692 +6,598 @@
 <title>إدارة Dent Supply</title>
 
 <style>
-:root{
-  --bg:#f4f8fb;
-  --panel:#fff;
-  --ink:#16323f;
-  --soft:#4c6673;
-  --primary:#1c6e8c;
-  --dark:#124a5f;
-  --line:#dfeaf0;
-  --ok:#16865b;
-  --danger:#b3543f
-}
-
+:root{--bg:#f4f8fb;--panel:#fff;--ink:#16323f;--soft:#4c6673;--primary:#1c6e8c;--dark:#124a5f;--line:#dfeaf0;--ok:#16865b;--danger:#b3543f}
 *{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Segoe UI,Tahoma,sans-serif}
+.wrap{max-width:1000px;margin:auto;padding:28px 16px 60px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 14px 40px #16323f14}
+.login-panel{max-width:480px;margin:60px auto}
+.brand{display:flex;gap:12px;align-items:center;color:var(--dark);margin-bottom:18px}
+.mark{width:48px;height:48px;border-radius:14px;background:var(--primary);display:grid;place-items:center}
+.mark svg{width:28px;stroke:#fff}
+.brand strong{display:block;font-size:1.15rem}
+.brand small{color:var(--soft)}
+h1{margin:0 0 10px;color:var(--dark)}
+h2{margin:0 0 4px;color:var(--dark);font-size:1.05rem}
+.sub{margin:0 0 20px;color:var(--soft)}
+form{display:grid;gap:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+label{display:grid;gap:7px;font-weight:700}
+input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fbfdff;font:inherit;color:var(--ink)}
+input[type="file"]{cursor:pointer;padding:10px}
+textarea{min-height:100px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+button{border:0;border-radius:11px;padding:11px 16px;font:inherit;font-weight:800;cursor:pointer}
+.primary{background:var(--primary);color:#fff}
+.secondary,.mini{background:var(--bg);color:var(--dark);border:1px solid var(--line)}
+.logout{background:#fff3f1;color:var(--danger);border:1px solid #f0d8d1;margin-bottom:20px}
+.status{display:none;margin-top:16px;padding:12px;border-radius:11px;font-weight:700}
+.status.show{display:block}
+.list{display:grid;gap:10px;margin-top:24px}
+.item{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:13px;padding:14px}
+.item strong,.item small{display:block}
+.item small{color:var(--soft)}
+.danger{background:#fff3f1;color:var(--danger);border:1px solid #f0d8d1}
+.preview{display:none;width:100px;height:100px;object-fit:cover;border-radius:12px;border:1px solid var(--line);margin-top:5px}
+#adminPanel{display:none}
 
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--ink);
-  font-family:Segoe UI,Tahoma,sans-serif
-}
-
-.wrap{
-  max-width:1000px;
-  margin:auto;
-  padding:28px 16px 60px
-}
-
-.panel{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:24px;
-  box-shadow:0 14px 40px #16323f14
-}
-
-.login-panel{
-  max-width:480px;
-  margin:60px auto
-}
-
-.brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  color:var(--dark);
-  margin-bottom:18px
-}
-
-.mark{
-  width:48px;
-  height:48px;
-  border-radius:14px;
-  background:var(--primary);
-  display:grid;
-  place-items:center
-}
-
-.mark svg{
-  width:28px;
-  stroke:#fff
-}
-
-.brand strong{
-  display:block;
-  font-size:1.15rem
-}
-
-.brand small{
-  color:var(--soft)
-}
-
-h1{
-  margin:0 0 10px;
-  color:var(--dark)
-}
-
-.sub{
-  margin:0 0 20px;
-  color:var(--soft)
-}
-
-form{
-  display:grid;
-  gap:14px
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px
-}
-
-label{
-  display:grid;
-  gap:7px;
-  font-weight:700
-}
-
-input,select,textarea{
-  width:100%;
-  padding:12px 14px;
-  border:1px solid var(--line);
-  border-radius:12px;
-  background:#fbfdff;
-  font:inherit;
-  color:var(--ink)
-}
-
-input[type="file"]{
-  cursor:pointer;
-  padding:10px
-}
-
-textarea{
-  min-height:100px;
-  resize:vertical
-}
-
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap
-}
-
-button{
-  border:0;
-  border-radius:11px;
-  padding:11px 16px;
-  font:inherit;
-  font-weight:800;
-  cursor:pointer
-}
-
-.primary{
-  background:var(--primary);
-  color:#fff
-}
-
-.secondary,.mini{
-  background:var(--bg);
-  color:var(--dark);
-  border:1px solid var(--line)
-}
-
-.logout{
-  background:#fff3f1;
-  color:var(--danger);
-  border:1px solid #f0d8d1;
-  margin-bottom:20px
-}
-
-.status{
-  display:none;
-  margin-top:16px;
-  padding:12px;
-  border-radius:11px;
-  font-weight:700
-}
-
-.status.show{
-  display:block
-}
-
-.list{
-  display:grid;
-  gap:10px;
-  margin-top:24px
-}
-
-.item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  border:1px solid var(--line);
-  border-radius:13px;
-  padding:14px
-}
-
-.item strong,.item small{
-  display:block
-}
-
-.item small{
-  color:var(--soft)
-}
-
-.danger{
-  background:#fff3f1;
-  color:var(--danger);
-  border:1px solid #f0d8d1
-}
-
-.preview{
-  display:none;
-  width:100px;
-  height:100px;
-  object-fit:cover;
-  border-radius:12px;
-  border:1px solid var(--line);
-  margin-top:5px
-}
-
-#adminPanel{
-  display:none
-}
+/* ===== الأصناف ===== */
+.variants-box{border:1px dashed #b9d0db;border-radius:14px;padding:16px;background:#f9fcfe}
+.variants-box .hint{margin:0 0 12px;color:var(--soft);font-size:.9rem;font-weight:400}
+.variant-row{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.variant-row input{padding:10px 12px}
+.variant-row .mini{padding:10px 12px}
+.badge{display:inline-block;background:#e6f2f7;color:var(--dark);border-radius:8px;padding:2px 8px;font-size:.8rem;margin-inline-start:6px}
 
 @media(max-width:620px){
-  .item{
-    display:grid
-  }
-
-  .item-actions{
-    display:flex
-  }
-
-  .item-actions button{
-    flex:1
-  }
+  .item{display:grid}
+  .item-actions{display:flex}
+  .item-actions button{flex:1}
+  .variant-row{grid-template-columns:1fr 1fr auto}
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================
-     LOGIN
-========================= -->
-
+<!-- ========================= LOGIN ========================= -->
 <main class="wrap" id="loginPanel">
-
 <section class="panel login-panel">
-
 <div class="brand">
-
 <span class="mark">
-<svg viewBox="0 0 24 24"
-fill="none"
-stroke-width="1.8"
-stroke-linecap="round"
-stroke-linejoin="round">
-
+<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 <path d="M12 5c-1.6-1.6-4.8-2-6.2-.6C4.1 5.7 4 8.5 5 11c.8 2 1.4 4 1.6 6.2.1 1.4 1 2.3 2 2.3s1.6-1 1.8-2.4c.3-2.2.7-3.8 1.6-3.8s1.3 1.6 1.6 3.8c.2 1.4.8 2.4 1.8 2.4s1.9-.9 2-2.3c.2-2.2.8-4.2 1.6-6.2 1-2.5.9-5.3-.8-6.6C17.8 3 14.6 3.4 13 5"/>
 </svg>
 </span>
-
-<span>
-<strong>Dent Supply</strong>
-<small>لوحة إدارة مستلزمات وأدوات الأسنان</small>
-</span>
-
+<span><strong>Dent Supply</strong><small>لوحة إدارة مستلزمات وأدوات الأسنان</small></span>
 </div>
 
 <h1>تسجيل دخول الإدارة</h1>
-
-<p class="sub">
-يجب تسجيل الدخول للوصول إلى لوحة إدارة المنتجات.
-</p>
+<p class="sub">يجب تسجيل الدخول للوصول إلى لوحة إدارة المنتجات.</p>
 
 <form id="loginForm">
-
-<label>
-البريد الإلكتروني
-<input
-  id="loginEmail"
-  type="email"
-  autocomplete="username"
-  required
->
+<label>البريد الإلكتروني
+<input id="loginEmail" type="email" autocomplete="username" required>
 </label>
-
-<label>
-كلمة المرور
-<input
-  id="loginPassword"
-  type="password"
-  autocomplete="current-password"
-  required
->
+<label>كلمة المرور
+<input id="loginPassword" type="password" autocomplete="current-password" required>
 </label>
-
-<button
-  class="primary"
-  type="submit"
->
-دخول
-</button>
-
+<button class="primary" type="submit">دخول</button>
 </form>
 
-<div
-  id="loginStatus"
-  class="status"
-></div>
-
+<div id="loginStatus" class="status"></div>
 </section>
 </main>
 
-
-<!-- =========================
-     ADMIN PANEL
-========================= -->
-
-<main
-  class="wrap"
-  id="adminPanel"
->
-
+<!-- ========================= ADMIN PANEL ========================= -->
+<main class="wrap" id="adminPanel">
 <section class="panel">
 
 <div class="brand">
-
 <span class="mark">
-<svg viewBox="0 0 24 24"
-fill="none"
-stroke-width="1.8"
-stroke-linecap="round"
-stroke-linejoin="round">
-
+<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 <path d="M12 5c-1.6-1.6-4.8-2-6.2-.6C4.1 5.7 4 8.5 5 11c.8 2 1.4 4 1.6 6.2.1 1.4 1 2.3 2 2.3s1.6-1 1.8-2.4c.3-2.2.7-3.8 1.6-3.8s1.3 1.6 1.6 3.8c.2 1.4.8 2.4 1.8 2.4s1.9-.9 2-2.3c.2-2.2.8-4.2 1.6-6.2 1-2.5.9-5.3-.8-6.6C17.8 3 14.6 3.4 13 5"/>
 </svg>
 </span>
-
-<span>
-<strong>Dent Supply</strong>
-<small>لوحة إدارة مستلزمات وأدوات الأسنان</small>
-</span>
-
+<span><strong>Dent Supply</strong><small>لوحة إدارة مستلزمات وأدوات الأسنان</small></span>
 </div>
 
-<button
-  type="button"
-  class="logout"
-  id="logout"
->
-تسجيل الخروج
-</button>
+<button type="button" class="logout" id="logout">تسجيل الخروج</button>
 
 <h1>إدارة المنتجات</h1>
-
-<p class="sub">
-أي منتج تضيفه هنا يظهر في الصفحة الرئيسية عند جميع الزوار.
-</p>
-
+<p class="sub">أي منتج تضيفه هنا يظهر في الصفحة الرئيسية عند جميع الزوار.</p>
 
 <form id="form">
 
 <div class="grid">
-
-<label>
-اسم المنتج
-<input
-  name="name"
-  required
->
+<label>اسم المنتج
+<input name="name" required>
 </label>
 
-
-<label>
-الفئة
-
-<select
-  name="category"
-  required
->
-
-<option value="Composites">
-Composites
-</option>
-
-<option value="Instruments">
-Instruments
-</option>
-
-<option value="Devices">
-Devices
-</option>
-
-<option value="Surgical Instruments">
-Surgical Instruments
-</option>
-
-<option value="Disposable Items">
-Disposable Items
-</option>
-
-<option value="Prosthetic Equipment">
-Prosthetic Equipment
-</option>
-
+<label>الفئة
+<select name="category" required>
+<option value="Composites">Composites</option>
+<option value="Instruments">Instruments</option>
+<option value="Devices">Devices</option>
+<option value="Surgical Instruments">Surgical Instruments</option>
+<option value="Disposable Items">Disposable Items</option>
+<option value="Prosthetic Equipment">Prosthetic Equipment</option>
 </select>
-
 </label>
 
-
-<label>
-السعر (د.ع)
-
-<input
-  name="price"
-  type="number"
-  min="0"
-  required
->
-
+<label>السعر الأساسي (د.ع)
+<input name="price" type="number" min="0" required>
 </label>
 
-
-<label>
-
-صورة المنتج
-
-<input
-  name="image_file"
-  type="file"
-  accept="image/*"
->
-
-<input
-  name="image_url"
-  type="hidden"
->
-
-<small style="color:#4c6673;font-weight:400">
-اختر صورة من جهازك — الحد الأقصى 5MB
-</small>
-
-<img
-  id="imagePreview"
-  class="preview"
->
-
+<label>صورة المنتج
+<input name="image_file" type="file" accept="image/*">
+<input name="image_url" type="hidden">
+<small style="color:#4c6673;font-weight:400">اختر صورة من جهازك — الحد الأقصى 5MB</small>
+<img id="imagePreview" class="preview">
 </label>
-
 </div>
 
-
-<label>
-الوصف
-
-<textarea
-  name="description"
-></textarea>
-
+<label>الوصف
+<textarea name="description"></textarea>
 </label>
 
+<!-- ===== الأصناف ===== -->
+<div class="variants-box">
+<h2>أصناف المنتج</h2>
+<p class="hint">
+اتركها فارغة إذا المنتج بدون أصناف. إذا تركت سعر الصنف فارغاً يُستخدم السعر الأساسي.
+</p>
+<label style="margin-bottom:12px">
+إضافة عدة أصناف دفعة وحدة
+<textarea id="bulkVariants" style="min-height:130px;direction:ltr;text-align:left" placeholder="Coupland 1&#10;Coupland 2&#10;Coupland 3&#10;Bein small | 9000&#10;Bein large | 11000"></textarea>
+<small style="color:#4c6673;font-weight:400">كل صنف بسطر. للسعر اكتب بعد الاسم علامة | ثم السعر (اختياري).</small>
+</label>
+<div class="actions" style="margin-bottom:14px">
+<button type="button" class="primary" id="applyBulk">إضافة الأصناف للقائمة</button>
+<button type="button" class="secondary" id="addVariant">+ إضافة صنف واحد</button>
+</div>
+<div id="variantsList"></div>
+</div>
 
 <div class="actions">
-
-<button
-  class="primary"
-  type="submit"
->
-حفظ المنتج
-</button>
-
-<button
-  type="button"
-  class="secondary"
-  id="clear"
->
-مسح الحقول
-</button>
-
+<button class="primary" type="submit">حفظ المنتج</button>
+<button type="button" class="secondary" id="clear">مسح الحقول</button>
 </div>
 
 </form>
 
-
-<div
-  id="status"
-  class="status"
-></div>
-
-<div
-  id="list"
-  class="list"
-></div>
+<div id="status" class="status"></div>
+<div id="list" class="list"></div>
 
 </section>
 </main>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
 /* =========================
    SUPABASE
 ========================= */
-
-const SUPA_URL=
-'https://ncurbamdczoiafvcnhzd.supabase.co';
-
-const KEY=
-'sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF';
-
-const db=
-window.supabase.createClient(
-  SUPA_URL,
-  KEY
-);
-
+const SUPA_URL='https://ncurbamdczoiafvcnhzd.supabase.co';
+const KEY='sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF';
+const db=window.supabase.createClient(SUPA_URL,KEY);
 
 /* =========================
    STORAGE
 ========================= */
-
-const STORAGE_BUCKET=
-'product-images';
-
+const STORAGE_BUCKET='product-images';
 
 async function uploadProductImage(file){
-
-  if(!file){
-    return '';
-  }
-
-  if(file.size > 5 * 1024 * 1024){
-
-    throw new Error(
-      'حجم الصورة يجب أن يكون أقل من 5MB'
-    );
-
-  }
-
-  const ext=
-    (
-      file.name.split('.').pop() ||
-      'jpg'
-    ).toLowerCase();
-
-
-  const allowed=[
-    'jpg',
-    'jpeg',
-    'png',
-    'webp',
-    'gif'
-  ];
-
-
-  if(!allowed.includes(ext)){
-
-    throw new Error(
-      'نوع الصورة غير مدعوم'
-    );
-
-  }
-
-
-  const fileName=
-    `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-
-
-  const {
-    error:uploadError
-  }=
-    await db
-      .storage
-      .from(STORAGE_BUCKET)
-      .upload(
-        fileName,
-        file,
-        {
-          cacheControl:'3600',
-          upsert:false,
-          contentType:file.type
-        }
-      );
-
-
-  if(uploadError){
-    throw uploadError;
-  }
-
-
-  const {data}=
-    db
-      .storage
-      .from(STORAGE_BUCKET)
-      .getPublicUrl(fileName);
-
-
+  if(!file){return '';}
+  if(file.size>5*1024*1024){throw new Error('حجم الصورة يجب أن يكون أقل من 5MB');}
+  const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+  const allowed=['jpg','jpeg','png','webp','gif'];
+  if(!allowed.includes(ext)){throw new Error('نوع الصورة غير مدعوم');}
+  const fileName=`products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const {error:uploadError}=await db.storage.from(STORAGE_BUCKET).upload(fileName,file,{cacheControl:'3600',upsert:false,contentType:file.type});
+  if(uploadError){throw uploadError;}
+  const {data}=db.storage.from(STORAGE_BUCKET).getPublicUrl(fileName);
   return data.publicUrl;
 }
-
 
 /* =========================
    AUTH UI
 ========================= */
+const loginPanel=document.querySelector('#loginPanel');
+const adminPanel=document.querySelector('#adminPanel');
+const loginForm=document.querySelector('#loginForm');
+const loginStatus=document.querySelector('#loginStatus');
 
-const loginPanel=
-  document.querySelector('#loginPanel');
-
-const adminPanel=
-  document.querySelector('#adminPanel');
-
-const loginForm=
-  document.querySelector('#loginForm');
-
-const loginStatus=
-  document.querySelector('#loginStatus');
-
-
-function loginMessage(
-  text,
-  bad=false
-){
-
+function loginMessage(text,bad=false){
   loginStatus.textContent=text;
-
-  loginStatus.className=
-    'status show';
-
-  loginStatus.style.color=
-    bad ? '#b3543f' : '#16865b';
-
-  loginStatus.style.background=
-    bad ? '#fff3f1' : '#edf8f2';
+  loginStatus.className='status show';
+  loginStatus.style.color=bad?'#b3543f':'#16865b';
+  loginStatus.style.background=bad?'#fff3f1':'#edf8f2';
 }
-
-
-function showAdmin(){
-
-  loginPanel.style.display='none';
-
-  adminPanel.style.display='block';
-
-  load();
-}
-
-
-function showLogin(){
-
-  adminPanel.style.display='none';
-
-  loginPanel.style.display='block';
-
-}
-
+function showAdmin(){loginPanel.style.display='none';adminPanel.style.display='block';load();}
+function showLogin(){adminPanel.style.display='none';loginPanel.style.display='block';}
 
 /* =========================
    LOGIN
 ========================= */
-
-loginForm.addEventListener(
-  'submit',
-  async e=>{
-
-    e.preventDefault();
-
-    const email=
-      document.querySelector(
-        '#loginEmail'
-      ).value.trim();
-
-    const password=
-      document.querySelector(
-        '#loginPassword'
-      ).value;
-
-
-    loginMessage(
-      'جاري تسجيل الدخول...'
-    );
-
-
-    const {
-      error
-    }=
-      await db.auth.signInWithPassword({
-        email,
-        password
-      });
-
-
-    if(error){
-
-      loginMessage(
-        'فشل تسجيل الدخول: '+
-        error.message,
-        true
-      );
-
-      return;
-    }
-
-
-    loginForm.reset();
-
-    loginMessage('');
-
-  }
-);
-
+loginForm.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const email=document.querySelector('#loginEmail').value.trim();
+  const password=document.querySelector('#loginPassword').value;
+  loginMessage('جاري تسجيل الدخول...');
+  const {error}=await db.auth.signInWithPassword({email,password});
+  if(error){loginMessage('فشل تسجيل الدخول: '+error.message,true);return;}
+  loginForm.reset();
+  loginMessage('');
+});
 
 /* =========================
    LOGOUT
 ========================= */
-
-document
-  .querySelector('#logout')
-  .addEventListener(
-    'click',
-    async()=>{
-
-      await db.auth.signOut();
-
-      showLogin();
-
-      loginMessage(
-        'تم تسجيل الخروج.'
-      );
-
-    }
-  );
-
+document.querySelector('#logout').addEventListener('click',async()=>{
+  await db.auth.signOut();
+  showLogin();
+  loginMessage('تم تسجيل الخروج.');
+});
 
 /* =========================
    AUTH STATE
 ========================= */
-
-db.auth.onAuthStateChange(
-  (event,session)=>{
-
-    if(session){
-
-      showAdmin();
-
-    }else{
-
-      showLogin();
-
-    }
-
-  }
-);
-
+db.auth.onAuthStateChange((event,session)=>{
+  if(session){showAdmin();}else{showLogin();}
+});
 
 /* =========================
    CATEGORIES
 ========================= */
-
-const CATEGORIES=[
-  'Composites',
-  'Instruments',
-  'Devices',
-  'Surgical Instruments',
-  'Disposable Items',
-  'Prosthetic Equipment'
-];
-
+const CATEGORIES=['Composites','Instruments','Devices','Surgical Instruments','Disposable Items','Prosthetic Equipment'];
 
 const OLD_CATEGORY_MAP={
-
-  exam:'Instruments',
-
-  fill:'Composites',
-
-  surgery:'Surgical Instruments',
-
-  clean:'Instruments',
-
-  consumables:'Disposable Items',
-
-  'surgical instruments':
-    'Surgical Instruments',
-
-  'Disposable items':
-    'Disposable Items',
-
-  'Prosetheice equipment':
-    'Prosthetic Equipment',
-
-  'Prostheice equipment':
-    'Prosthetic Equipment'
-
+  exam:'Instruments',fill:'Composites',surgery:'Surgical Instruments',clean:'Instruments',
+  consumables:'Disposable Items','surgical instruments':'Surgical Instruments',
+  'Disposable items':'Disposable Items','Prosetheice equipment':'Prosthetic Equipment',
+  'Prostheice equipment':'Prosthetic Equipment'
 };
-
 
 /* =========================
    DEFAULT PRODUCTS
 ========================= */
-
 const DEFAULT_PRODUCTS=[
-
-{
-id:'p1',
-category:'Instruments',
-name:'مسبر أسنان مزدوج',
-description:'مسبر فحص دقيق من ستانلس ستيل طبي.',
-price:8500,
-image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p1.jpg'
-},
-
-{
-id:'p2',
-category:'Instruments',
-name:'مرآة فحص فم رقم 5',
-description:'مرآة عاكسة بجودة عالية ومقبض مريح.',
-price:6000,
-image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p2.jpg'
-},
-
-{
-id:'p3',
-category:'Instruments',
-name:'ملقط فحص أسنان',
-description:'ملقط دقيق لإمساك القطن والمواد أثناء الفحص.',
-price:7000,
-image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p3.jpg'
-},
-
-{
-id:'p4',
-category:'Composites',
-name:'طقم أدوات حشو مركب',
-description:'طقم كامل لوضع وتشكيل الحشوات التجميلية.',
-price:32000,
-image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p4.webp'
-},
-
-{
-id:'p5',
-category:'Composites',
-name:'سباتيولا خلط الحشوة',
-description:'مقاس مزدوج لخلط مواد الحشو والسمنت.',
-price:9500,
-image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p5.jpg'
-},
-
-{
-id:'p6',
-category:'Composites',
-name:'أداة كاربر لتشكيل الحشو',
-description:'طرفين للنحت الدقيق قبل التصلب.',
-price:11000,
-image_url:''
-},
-
-{
-id:'p7',
-category:'Surgical Instruments',
-name:'ملقط قلع أضراس علوي',
-description:'ستانلس ستيل جراحي معتمد ومريح.',
-price:45000,
-image_url:''
-},
-
-{
-id:'p8',
-category:'Surgical Instruments',
-name:'مبعد أنسجة جراحي',
-description:'لإبعاد اللثة أثناء العمليات البسيطة.',
-price:21000,
-image_url:''
-},
-
-{
-id:'p9',
-category:'Surgical Instruments',
-name:'مشرط جراحي بشفرات بديلة',
-description:'مقبض قابل لإعادة الاستخدام مع شفرات معقمة.',
-price:15500,
-image_url:''
-},
-
-{
-id:'p10',
-category:'Instruments',
-name:'مقياس تارتار وتنظيف',
-description:'طرفين لإزالة الجير من السطح.',
-price:13000,
-image_url:''
-},
-
-{
-id:'p11',
-category:'Instruments',
-name:'طقم تلميع الأسنان',
-description:'كؤوس تلميع مطاطية بثلاث درجات خشونة.',
-price:17000,
-image_url:''
-},
-
-{
-id:'p12',
-category:'Disposable Items',
-name:'قفازات فحص لاتكس',
-description:'صندوق 100 قفاز، مقاسات متعددة.',
-price:12000,
-image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p12.jpg'
-},
-
-{
-id:'p13',
-category:'Disposable Items',
-name:'كمامات طبية ثلاثية الطبقات',
-description:'صندوق 50 كمامة معتمدة طبياً.',
-price:8000,
-image_url:''
-},
-
-{
-id:'p14',
-category:'Disposable Items',
-name:'لفافات قطن طبي للفم',
-description:'عبوة 100 قطعة، امتصاص عالي.',
-price:4500,
-image_url:''
-}
-
+{id:'p1',category:'Instruments',name:'مسبر أسنان مزدوج',description:'مسبر فحص دقيق من ستانلس ستيل طبي.',price:8500,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p1.jpg'},
+{id:'p2',category:'Instruments',name:'مرآة فحص فم رقم 5',description:'مرآة عاكسة بجودة عالية ومقبض مريح.',price:6000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p2.jpg'},
+{id:'p3',category:'Instruments',name:'ملقط فحص أسنان',description:'ملقط دقيق لإمساك القطن والمواد أثناء الفحص.',price:7000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p3.jpg'},
+{id:'p4',category:'Composites',name:'طقم أدوات حشو مركب',description:'طقم كامل لوضع وتشكيل الحشوات التجميلية.',price:32000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p4.webp'},
+{id:'p5',category:'Composites',name:'سباتيولا خلط الحشوة',description:'مقاس مزدوج لخلط مواد الحشو والسمنت.',price:9500,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p5.jpg'},
+{id:'p6',category:'Composites',name:'أداة كاربر لتشكيل الحشو',description:'طرفين للنحت الدقيق قبل التصلب.',price:11000,image_url:''},
+{id:'p7',category:'Surgical Instruments',name:'ملقط قلع أضراس علوي',description:'ستانلس ستيل جراحي معتمد ومريح.',price:45000,image_url:''},
+{id:'p8',category:'Surgical Instruments',name:'مبعد أنسجة جراحي',description:'لإبعاد اللثة أثناء العمليات البسيطة.',price:21000,image_url:''},
+{id:'p9',category:'Surgical Instruments',name:'مشرط جراحي بشفرات بديلة',description:'مقبض قابل لإعادة الاستخدام مع شفرات معقمة.',price:15500,image_url:''},
+{id:'p10',category:'Instruments',name:'مقياس تارتار وتنظيف',description:'طرفين لإزالة الجير من السطح.',price:13000,image_url:''},
+{id:'p11',category:'Instruments',name:'طقم تلميع الأسنان',description:'كؤوس تلميع مطاطية بثلاث درجات خشونة.',price:17000,image_url:''},
+{id:'p12',category:'Disposable Items',name:'قفازات فحص لاتكس',description:'صندوق 100 قفاز، مقاسات متعددة.',price:12000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p12.jpg'},
+{id:'p13',category:'Disposable Items',name:'كمامات طبية ثلاثية الطبقات',description:'صندوق 50 كمامة معتمدة طبياً.',price:8000,image_url:''},
+{id:'p14',category:'Disposable Items',name:'لفافات قطن طبي للفم',description:'عبوة 100 قطعة، امتصاص عالي.',price:4500,image_url:''}
 ];
-
 
 /* =========================
    VARIABLES
 ========================= */
-
 let editing=null;
-
-const $=
-  s=>document.querySelector(s);
-
-const form=
-  $('#form');
-
-const imageFileInput=
-  form.querySelector(
-    '[name="image_file"]'
-  );
-
-const imageUrlInput=
-  form.querySelector(
-    '[name="image_url"]'
-  );
-
-const imagePreview=
-  $('#imagePreview');
-
+const $=s=>document.querySelector(s);
+const form=$('#form');
+const imageFileInput=form.querySelector('[name="image_file"]');
+const imageUrlInput=form.querySelector('[name="image_url"]');
+const imagePreview=$('#imagePreview');
+const variantsList=$('#variantsList');
 
 /* =========================
    STATUS
 ========================= */
-
-function status(
-  text,
-  bad=false
-){
-
-  const e=
-    $('#status');
-
+function status(text,bad=false){
+  const e=$('#status');
   e.textContent=text;
-
-  e.className=
-    'status show';
-
-  e.style.color=
-    bad ? '#b3543f' : '#16865b';
-
-  e.style.background=
-    bad ? '#fff3f1' : '#edf8f2';
-
+  e.className='status show';
+  e.style.color=bad?'#b3543f':'#16865b';
+  e.style.background=bad?'#fff3f1':'#edf8f2';
 }
 
+/* =========================
+   VARIANTS (الأصناف)
+========================= */
+function addVariantRow(name='',price=''){
+  const row=document.createElement('div');
+  row.className='variant-row';
+  row.innerHTML=`
+    <input type="text" class="v-name" placeholder="اسم الصنف (مثال: Coupland 3)" value="${escapeHtml(name)}">
+    <input type="number" class="v-price" min="0" placeholder="السعر (اختياري)" value="${escapeHtml(price)}">
+    <button type="button" class="mini danger v-remove">حذف</button>
+  `;
+  variantsList.appendChild(row);
+}
+
+function readVariants(){
+  return [...variantsList.querySelectorAll('.variant-row')]
+    .map(r=>{
+      const name=r.querySelector('.v-name').value.trim();
+      const priceRaw=r.querySelector('.v-price').value.trim();
+      return {name, price: priceRaw===''?null:Number(priceRaw)};
+    })
+    .filter(v=>v.name);
+}
+
+function setVariants(list){
+  variantsList.innerHTML='';
+  (Array.isArray(list)?list:[]).forEach(v=>addVariantRow(v.name,v.price ?? ''));
+}
+
+$('#addVariant').addEventListener('click',()=>addVariantRow());
+
+$('#applyBulk').addEventListener('click',()=>{
+  const box=$('#bulkVariants');
+  const lines=box.value.split('\n').map(l=>l.trim()).filter(Boolean);
+  if(!lines.length){status('اكتب الأصناف أولاً، كل صنف بسطر.',true);return;}
+
+  const existing=new Set(readVariants().map(v=>v.name.toLowerCase()));
+  let added=0;
+
+  lines.forEach(line=>{
+    let name=line,price='';
+    const m=line.match(/^(.*?)\s*[|\t]\s*(\d+)\s*$/);
+    if(m){name=m[1].trim();price=m[2];}
+    if(!name||existing.has(name.toLowerCase())){return;}
+    existing.add(name.toLowerCase());
+    addVariantRow(name,price);
+    added++;
+  });
+
+  box.value='';
+  status(`تمت إضافة ${added} صنف للقائمة. اضغط "حفظ المنتج" لتثبيتها.`);
+});
+
+variantsList.addEventListener('click',e=>{
+  const btn=e.target.closest('.v-remove');
+  if(btn){btn.closest('.variant-row').remove();}
+});
 
 /* =========================
    CATEGORY
 ========================= */
-
 function mapCategory(category){
-
-  if(
-    CATEGORIES.includes(category)
-  ){
-
-    return category;
-
-  }
-
-  return(
-    OLD_CATEGORY_MAP[category] ||
-    'Instruments'
-  );
-
+  if(CATEGORIES.includes(category)){return category;}
+  return OLD_CATEGORY_MAP[category]||'Instruments';
 }
-
 
 /* =========================
    NORMALIZE
 ========================= */
-
 function normalize(p){
-
   return {
-
     id:p.id,
-
-    name:p.name || '',
-
-    category:
-      mapCategory(
-        p.category ||
-        p.cat ||
-        'Instruments'
-      ),
-
-    description:
-      p.description ||
-      p.desc ||
-      '',
-
-    price:
-      Number(p.price) || 0,
-
-    image_url:
-      p.image_url || ''
-
+    name:p.name||'',
+    category:mapCategory(p.category||p.cat||'Instruments'),
+    description:p.description||p.desc||'',
+    price:Number(p.price)||0,
+    image_url:p.image_url||'',
+    variants:Array.isArray(p.variants)?p.variants:[]
   };
-
 }
-
 
 /* =========================
    SEED
 ========================= */
-
 async function seedProducts(){
-
   try{
+    const {data:rows,error:getErr}=await db.from('products').select('id');
+    if(getErr){throw getErr;}
+    if(rows&&rows.length){return;}
 
-    const {
-      data:rows,
-      error:getErr
-    }=
-      await db
-        .from('products')
-        .select('id');
+    const payload=DEFAULT_PRODUCTS.map(p=>({
+      id:p.id,name:p.name,category:p.category,description:p.description,
+      price:p.price,image_url:p.image_url,variants:[],
+      created_at:new Date().toISOString()
+    }));
 
-
-    if(getErr){
-      throw getErr;
-    }
-
-
-    if(
-      rows &&
-      rows.length
-    ){
-
-      return;
-
-    }
-
-
-    const payload=
-      DEFAULT_PRODUCTS.map(
-        p=>({
-
-          id:p.id,
-
-          name:p.name,
-
-          category:p.category,
-
-          description:p.description,
-
-          price:p.price,
-
-          image_url:p.image_url,
-
-          created_at:
-            new Date().toISOString()
-
-        })
-      );
-
-
-    const {
-      error:insertErr
-    }=
-      await db
-        .from('products')
-        .insert(payload);
-
-
-    if(insertErr){
-      throw insertErr;
-    }
-
-
-    status(
-      'تمت إضافة المنتجات الأساسية إلى قاعدة البيانات.'
-    );
-
-
+    const {error:insertErr}=await db.from('products').insert(payload);
+    if(insertErr){throw insertErr;}
+    status('تمت إضافة المنتجات الأساسية إلى قاعدة البيانات.');
   }catch(err){
-
     console.error(err);
-
-    status(
-      'تعذر تهيئة المنتجات الأساسية: '+
-      (err.message || err),
-      true
-    );
-
+    status('تعذر تهيئة المنتجات الأساسية: '+(err.message||err),true);
   }
-
 }
-
 
 /* =========================
    LOAD
 ========================= */
-
 async function load(){
-
   try{
-
     await seedProducts();
-
-
-    const {
-      data,
-      error
-    }=
-      await db
-        .from('products')
-        .select('*')
-        .order(
-          'created_at',
-          {
-            ascending:false
-          }
-        );
-
-
+    const {data,error}=await db.from('products').select('*').order('created_at',{ascending:false});
     if(error){
-
-      status(
-        'تعذر قراءة المنتجات من Supabase: '+
-        error.message,
-        true
-      );
-
+      status('تعذر قراءة المنتجات من Supabase: '+error.message,true);
       return;
-
     }
-
-
-    render(
-      (data || [])
-        .map(normalize)
-    );
-
-
+    render((data||[]).map(normalize));
   }catch(err){
-
-    status(
-      'تعذر تحميل المنتجات: '+
-      (err.message || err),
-      true
-    );
-
+    status('تعذر تحميل المنتجات: '+(err.message||err),true);
   }
-
 }
-
 
 /* =========================
    RENDER
 ========================= */
-
 function render(items){
-
-  $('#list').innerHTML=
-    items.length
-
-    ?
-
-    items.map(
-      p=>`
-
-      <div class="item">
-
-        <div>
-
-          <strong>
-            ${escapeHtml(p.name)}
-          </strong>
-
-          <small>
-            ${escapeHtml(p.category)}
-            •
-            ${p.price.toLocaleString('ar-IQ')}
-            د.ع
-          </small>
-
-        </div>
-
-        <div class="item-actions">
-
-          <button
-            class="mini"
-            data-edit="${escapeHtml(p.id)}"
-          >
-            تعديل
-          </button>
-
-          <button
-            class="mini danger"
-            data-delete="${escapeHtml(p.id)}"
-          >
-            حذف
-          </button>
-
-        </div>
-
+  $('#list').innerHTML=items.length
+  ? items.map(p=>`
+    <div class="item">
+      <div>
+        <strong>
+          ${escapeHtml(p.name)}
+          ${p.variants.length?`<span class="badge">${p.variants.length} أصناف</span>`:''}
+        </strong>
+        <small>
+          ${escapeHtml(p.category)} • ${p.price.toLocaleString('ar-IQ')} د.ع
+        </small>
       </div>
-
-      `
-    ).join('')
-
-    :
-
-    '<div class="item">لا توجد منتجات في قاعدة البيانات.</div>';
-
+      <div class="item-actions">
+        <button class="mini" data-edit="${escapeHtml(p.id)}">تعديل</button>
+        <button class="mini danger" data-delete="${escapeHtml(p.id)}">حذف</button>
+      </div>
+    </div>`).join('')
+  : '<div class="item">لا توجد منتجات في قاعدة البيانات.</div>';
 }
-
 
 /* =========================
    ESCAPE
 ========================= */
-
 function escapeHtml(value){
-
-  return String(value ?? '')
-    .replace(
-      /[&<>"']/g,
-      m=>({
-
-        '&':'&amp;',
-        '<':'&lt;',
-        '>':'&gt;',
-        '"':'&quot;',
-        "'":'&#039;'
-
-      }[m])
-    );
-
+  return String(value??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 }
-
 
 /* =========================
    CLEAR
 ========================= */
-
 function clear(){
-
   form.reset();
-
   editing=null;
-
-  form.querySelector(
-    '[name=category]'
-  ).value='Instruments';
-
-  form.querySelector(
-    '[name=price]'
-  ).value='';
-
+  form.querySelector('[name=category]').value='Instruments';
+  form.querySelector('[name=price]').value='';
   imageUrlInput.value='';
-
   imagePreview.src='';
-
   imagePreview.style.display='none';
-
+  variantsList.innerHTML='';
 }
-
 
 /* =========================
    IMAGE PREVIEW
 ========================= */
-
-imageFileInput.addEventListener(
-  'change',
-  ()=>{
-
-    const file=
-      imageFileInput.files?.[0];
-
-
-    if(!file){
-
-      imagePreview.src='';
-
-      imagePreview.style.display=
-        'none';
-
-      return;
-
-    }
-
-
-    if(
-      file.size >
-      5 * 1024 * 1024
-    ){
-
-      status(
-        'حجم الصورة يجب أن يكون أقل من 5MB',
-        true
-      );
-
-      imageFileInput.value='';
-
-      return;
-
-    }
-
-
-    const reader=
-      new FileReader();
-
-
-    reader.onload=
-      event=>{
-
-        imagePreview.src=
-          event.target.result;
-
-        imagePreview.style.display=
-          'block';
-
-      };
-
-
-    reader.readAsDataURL(file);
-
+imageFileInput.addEventListener('change',()=>{
+  const file=imageFileInput.files?.[0];
+  if(!file){imagePreview.src='';imagePreview.style.display='none';return;}
+  if(file.size>5*1024*1024){
+    status('حجم الصورة يجب أن يكون أقل من 5MB',true);
+    imageFileInput.value='';
+    return;
   }
-);
-
+  const reader=new FileReader();
+  reader.onload=event=>{
+    imagePreview.src=event.target.result;
+    imagePreview.style.display='block';
+  };
+  reader.readAsDataURL(file);
+});
 
 /* =========================
    SAVE
 ========================= */
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
 
-form.addEventListener(
-  'submit',
-  async e=>{
+  const f=new FormData(form);
+  const file=imageFileInput.files?.[0]||null;
+  const name=String(f.get('name')||'').trim();
 
-    e.preventDefault();
+  if(!name){status('اكتب اسم المنتج.',true);return;}
 
+  let imageUrl=String(f.get('image_url')||'').trim();
 
-    const f=
-      new FormData(form);
-
-
-    const file=
-      imageFileInput.files?.[0] ||
-      null;
-
-
-    const name=
-      String(
-        f.get('name') || ''
-      ).trim();
-
-
-    if(!name){
-
-      status(
-        'اكتب اسم المنتج.',
-        true
-      );
-
+  if(file){
+    try{
+      status('جاري رفع الصورة...');
+      imageUrl=await uploadProductImage(file);
+    }catch(err){
+      console.error(err);
+      status('فشل رفع الصورة: '+(err.message||err),true);
       return;
-
     }
-
-
-    let imageUrl=
-      String(
-        f.get('image_url') || ''
-      ).trim();
-
-
-    if(file){
-
-      try{
-
-        status(
-          'جاري رفع الصورة...'
-        );
-
-
-        imageUrl=
-          await uploadProductImage(
-            file
-          );
-
-
-      }catch(err){
-
-        console.error(err);
-
-        status(
-          'فشل رفع الصورة: '+
-          (err.message || err),
-          true
-        );
-
-        return;
-
-      }
-
-    }
-
-
-    const row={
-
-      name:name,
-
-      category:
-        mapCategory(
-          f.get('category')
-        ),
-
-      description:
-        String(
-          f.get('description') || ''
-        ).trim(),
-
-      price:
-        Number(
-          f.get('price') || 0
-        ),
-
-      image_url:imageUrl
-
-    };
-
-
-    let result;
-
-
-    if(editing){
-
-      result=
-        await db
-          .from('products')
-          .update(row)
-          .eq(
-            'id',
-            editing
-          );
-
-    }else{
-
-      result=
-        await db
-          .from('products')
-          .insert({
-
-            ...row,
-
-            id:
-              'p'+Date.now(),
-
-            created_at:
-              new Date().toISOString()
-
-          });
-
-    }
-
-
-    if(result.error){
-
-      status(
-        'فشل الحفظ: '+
-        result.error.message,
-        true
-      );
-
-      return;
-
-    }
-
-
-    status(
-      editing
-        ? 'تم تحديث المنتج.'
-        : 'تمت إضافة المنتج.'
-    );
-
-
-    clear();
-
-    load();
-
   }
-);
 
+  const row={
+    name:name,
+    category:mapCategory(f.get('category')),
+    description:String(f.get('description')||'').trim(),
+    price:Number(f.get('price')||0),
+    image_url:imageUrl,
+    variants:readVariants()
+  };
+
+  let result;
+
+  if(editing){
+    result=await db.from('products').update(row).eq('id',editing);
+  }else{
+    result=await db.from('products').insert({
+      ...row,
+      id:'p'+Date.now(),
+      created_at:new Date().toISOString()
+    });
+  }
+
+  if(result.error){
+    status('فشل الحفظ: '+result.error.message,true);
+    return;
+  }
+
+  status(editing?'تم تحديث المنتج.':'تمت إضافة المنتج.');
+  clear();
+  load();
+});
 
 /* =========================
    EDIT / DELETE
 ========================= */
+$('#list').addEventListener('click',async e=>{
+  const edit=e.target.closest('[data-edit]');
+  const del=e.target.closest('[data-delete]');
 
-$('#list').addEventListener(
-  'click',
-  async e=>{
+  if(edit){
+    const {data,error}=await db.from('products').select('*').eq('id',edit.dataset.edit).single();
+    if(error){status(error.message,true);return;}
 
-    const edit=
-      e.target.closest(
-        '[data-edit]'
-      );
+    const p=normalize(data);
+    editing=p.id;
 
-    const del=
-      e.target.closest(
-        '[data-delete]'
-      );
+    form.name.value=p.name;
+    form.category.value=p.category;
+    form.price.value=p.price;
+    form.description.value=p.description;
+    imageUrlInput.value=p.image_url;
+    imageFileInput.value='';
+    setVariants(p.variants);
 
-
-    if(edit){
-
-      const {
-        data,
-        error
-      }=
-        await db
-          .from('products')
-          .select('*')
-          .eq(
-            'id',
-            edit.dataset.edit
-          )
-          .single();
-
-
-      if(error){
-
-        status(
-          error.message,
-          true
-        );
-
-        return;
-
-      }
-
-
-      const p=
-        normalize(data);
-
-
-      editing=p.id;
-
-
-      form.name.value=
-        p.name;
-
-      form.category.value=
-        p.category;
-
-      form.price.value=
-        p.price;
-
-      form.description.value=
-        p.description;
-
-
-      imageUrlInput.value=
-        p.image_url;
-
-
-      imageFileInput.value='';
-
-
-      if(p.image_url){
-
-        imagePreview.src=
-          p.image_url;
-
-        imagePreview.style.display=
-          'block';
-
-      }else{
-
-        imagePreview.src='';
-
-        imagePreview.style.display=
-          'none';
-
-      }
-
-
-      window.scrollTo({
-        top:0,
-        behavior:'smooth'
-      });
-
+    if(p.image_url){
+      imagePreview.src=p.image_url;
+      imagePreview.style.display='block';
+    }else{
+      imagePreview.src='';
+      imagePreview.style.display='none';
     }
 
-
-    if(
-      del &&
-      confirm('حذف المنتج؟')
-    ){
-
-      const {
-        error
-      }=
-        await db
-          .from('products')
-          .delete()
-          .eq(
-            'id',
-            del.dataset.delete
-          );
-
-
-      if(error){
-
-        status(
-          'فشل الحذف: '+
-          error.message,
-          true
-        );
-
-      }else{
-
-        status(
-          'تم حذف المنتج.'
-        );
-
-        load();
-
-      }
-
-    }
-
+    window.scrollTo({top:0,behavior:'smooth'});
   }
-);
 
-
-/* =========================
-   CLEAR
-========================= */
+  if(del&&confirm('حذف المنتج؟')){
+    const {error}=await db.from('products').delete().eq('id',del.dataset.delete);
+    if(error){
+      status('فشل الحذف: '+error.message,true);
+    }else{
+      status('تم حذف المنتج.');
+      load();
+    }
+  }
+});
 
 $('#clear').onclick=clear;
-
 
 /* =========================
    START
 ========================= */
-
 clear();
 
-
-/*
-  نتحقق من جلسة Supabase الحالية.
-*/
-
 (async()=>{
-
-  const {
-    data
-  }=
-    await db.auth.getSession();
-
-
-  if(data.session){
-
-    showAdmin();
-
-  }else{
-
-    showLogin();
-
-  }
-
+  const {data}=await db.auth.getSession();
+  if(data.session){showAdmin();}else{showLogin();}
 })();
-
 </script>
 
 </body>
