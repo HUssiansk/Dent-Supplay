@@ -2050,56 +2050,80 @@ const variantModal =
 $('variantModal');
 
 function openVariantModal(productId){
+let selectedVariants = new Set();
+let variantProductId = null;
 
-  const p =
-    products.find(
-      p => String(p.id) === String(productId)
-    );
+function updateVariantAddBtn(){
+  const b = $('variantAddBtn');
+  const n = selectedVariants.size;
+  b.disabled = !n;
+  b.textContent = n ? `إضافة ${n} للسلة` : 'اختر نوعاً أو أكثر';
+}
 
-  if(
-    !p ||
-    !p.variants ||
-    !p.variants.length
-  )
-    return;
+function openVariantModal(productId){
 
-  $('variantModalTitle').textContent =
-    p.name;
+  const p = products.find(p => String(p.id) === String(productId));
+
+  if(!p || !p.variants || !p.variants.length) return;
+
+  variantProductId = p.id;
+  selectedVariants = new Set();
+
+  $('variantModalTitle').textContent = p.name;
 
   $('variantModalList').innerHTML =
     p.variants.map(v => `
-
-<button
-  class="variant-option"
-  data-variant="${esc(v.name)}"
-  data-pid="${esc(p.id)}"
->
+<button class="variant-option" type="button" data-variant="${esc(v.name)}">
+  <span class="variant-check"></span>
   <span>${esc(v.name)}</span>
   <span>${money(v.price ?? p.price)}</span>
 </button>
-
 `).join('');
 
   $('variantModalList')
     .querySelectorAll('[data-variant]')
     .forEach(b => {
-
       b.onclick = () => {
-
-        addToCart(
-          b.dataset.pid,
-          b.dataset.variant
-        );
-
-        closeVariantModal();
-
+        const name = b.dataset.variant;
+        if(selectedVariants.has(name)){
+          selectedVariants.delete(name);
+          b.classList.remove('selected');
+        }else{
+          selectedVariants.add(name);
+          b.classList.add('selected');
+        }
+        updateVariantAddBtn();
       };
-
     });
 
+  updateVariantAddBtn();
   variantModal.classList.add('open');
-
 }
+
+$('variantAddBtn').onclick = () => {
+
+  if(!selectedVariants.size) return;
+
+  const id = variantProductId;
+
+  selectedVariants.forEach(name => {
+    const key = `${id}__${name}`;
+    if(cart[key]){
+      cart[key].qty++;
+    }else{
+      cart[key] = { productId:id, variantName:name, qty:1 };
+    }
+  });
+
+  const n = selectedVariants.size;
+
+  saveCart();
+  closeVariantModal();
+  toast(`تمت إضافة ${n} ${n === 1 ? 'نوع' : 'أنواع'} إلى السلة`);
+
+};
+  
+  
 
 function closeVariantModal(){
 
