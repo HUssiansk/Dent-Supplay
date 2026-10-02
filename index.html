@@ -1125,11 +1125,7 @@ h1{
   overflow:auto;
   background:#fff;
   border-radius:22px 22px 0 0;
-  <p class="variant-modal-sub">اختر نوعاً أو أكثر ثم اضغط إضافة</p>
-<div id="variantModalList"></div>
-<button class="btn btn-primary variant-add-btn" id="variantAddBtn" type="button" disabled>
-  اختر نوعاً أو أكثر
-</button>
+  padding: 20px;
 }
 
 @media(min-width:701px){
@@ -1912,9 +1908,13 @@ h1{
 
     </div>
 
-    <p class="variant-modal-sub">اضغط على الصنف الذي تريده لإضافته للسلة</p>
+    <p class="variant-modal-sub">اختر نوعاً أو أكثر ثم اضغط إضافة</p>
 
     <div id="variantModalList"></div>
+
+    <button class="btn btn-primary variant-add-btn" id="variantAddBtn" type="button" disabled>
+      اختر نوعاً أو أكثر
+    </button>
 
   </div>
 
@@ -1947,14 +1947,6 @@ window.supabase.createClient(
 );
 
 let products = [];
-
-/*
-  شكل عنصر السلة الجديد:
-  cart = {
-    "p7": { productId:"p7", variantName:null, qty:2 },
-    "p7__Coupland 3": { productId:"p7", variantName:"Coupland 3", qty:1 }
-  }
-*/
 
 let cart =
 JSON.parse(
@@ -2044,12 +2036,9 @@ searchModal.onclick = e => {
 
 };
 
-/* ===== Variant Modal ===== */
+/* ===== Variant Modal Logic ===== */
 
-const variantModal =
-$('variantModal');
-
-function openVariantModal(productId){
+const variantModal = $('variantModal');
 let selectedVariants = new Set();
 let variantProductId = null;
 
@@ -2122,24 +2111,17 @@ $('variantAddBtn').onclick = () => {
   toast(`تمت إضافة ${n} ${n === 1 ? 'نوع' : 'أنواع'} إلى السلة`);
 
 };
-  
-  
 
 function closeVariantModal(){
-
   variantModal.classList.remove('open');
-
 }
 
-$('closeVariantModal').onclick =
-closeVariantModal;
+$('closeVariantModal').onclick = closeVariantModal;
 
 variantModal.onclick = e => {
-
   if(e.target === variantModal){
     closeVariantModal();
   }
-
 };
 
 /* ===== Helpers ===== */
@@ -3495,7 +3477,7 @@ loadProducts();
 
 </script>
 
-<!-- ===== Auto Update Check (يحدث الصفحة تلقائياً عند تغيير version.json) ===== -->
+<!-- ===== Auto Update Check ===== -->
 <script>
 (function(){
 
