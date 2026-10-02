@@ -1184,7 +1184,30 @@ h1{
   white-space:nowrap;
   margin-right:10px
 }
-
+.variant-check{
+  width:22px;height:22px;flex:none;
+  border:2px solid var(--line);border-radius:7px;
+  margin-left:10px;display:grid;place-items:center;
+  color:#fff;font-size:14px;transition:.15s
+}
+.variant-option{gap:0}
+.variant-option > span:nth-child(2){flex:1}
+.variant-option.selected{
+  border-color:var(--primary);
+  background:var(--secondary)
+}
+.variant-option.selected .variant-check{
+  background:var(--primary);
+  border-color:var(--primary)
+}
+.variant-option.selected .variant-check:after{content:"✓"}
+.variant-add-btn{
+  position:sticky;bottom:0;width:100%;
+  margin-top:6px;box-shadow:0 -8px 14px #fff
+}
+.variant-add-btn:disabled{
+  opacity:.5;cursor:not-allowed;box-shadow:none
+}
 /* ===== Responsive ===== */
 
 @media(max-width:1100px){
