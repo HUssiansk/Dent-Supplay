@@ -34,7 +34,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
 .logout{background:#fff3f1;color:var(--danger);border:1px solid #f0d8d1;margin-bottom:20px}
 .status{display:none;margin-top:16px;padding:12px;border-radius:11px;font-weight:700}
 .status.show{display:block}
-.list{display:grid;gap:10px;margin-top:24px}
+.list{display:grid;gap:10px;margin-top:14px}
 .item{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:13px;padding:14px}
 .item strong,.item small{display:block}
 .item small{color:var(--soft)}
@@ -50,6 +50,9 @@ button:disabled{opacity:.6;cursor:not-allowed}
 .catalog-box{margin:18px 0;padding:16px;border:1px solid #cfe2ea;border-radius:14px;background:#f7fbfd}
 .catalog-box h2{margin-bottom:7px}
 .catalog-box p{margin:0 0 12px;color:var(--soft);font-weight:400}
+.search-box{margin-top:26px;display:grid;gap:6px}
+.search-box h2{margin-bottom:2px}
+.search-box small{color:var(--soft);font-weight:400}
 @media(max-width:620px){
 .item{display:grid}
 .item-actions{display:flex}
@@ -176,6 +179,13 @@ button:disabled{opacity:.6;cursor:not-allowed}
 </form>
 
 <div id="status" class="status"></div>
+
+<div class="search-box">
+<h2>🔍 البحث في المنتجات</h2>
+<input id="searchBox" type="search" placeholder="ابحث بالاسم، الفئة، الوصف، الصنف...">
+<small id="searchCount"></small>
+</div>
+
 <div id="list" class="list"></div>
 </section>
 </main>
@@ -264,6 +274,7 @@ const DEFAULT_PRODUCTS=[
 /* ===== القائمة الجديدة ===== */
 
 let editing=null;
+let allItems=[];
 const $=s=>document.querySelector(s);
 const form=$('#form');
 const imageFileInput=form.querySelector('[name="image_file"]');
@@ -365,9 +376,33 @@ async function load(){
     await seedProducts();
     const {data,error}=await db.from('products').select('*').order('created_at',{ascending:false});
     if(error){status('تعذر قراءة المنتجات من Supabase: '+error.message,true);return;}
-    render((data||[]).map(normalize));
+    allItems=(data||[]).map(normalize);
+    applySearch();
   }catch(err){status('تعذر تحميل المنتجات: '+(err.message||err),true);}
 }
+
+/* ===== البحث ===== */
+function norm(s){
+  return String(s??'').toLowerCase()
+    .replace(/[\u064B-\u0652\u0640]/g,'')
+    .replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي')
+    .trim();
+}
+
+function applySearch(){
+  const words=norm($('#searchBox').value).split(/\s+/).filter(Boolean);
+  const items=!words.length?allItems:allItems.filter(p=>{
+    const hay=norm([p.id,p.name,p.category,p.description,
+      p.variants.map(v=>typeof v==='string'?v:v.name).join(' ')].join(' '));
+    return words.every(w=>hay.includes(w));
+  });
+  if(!items.length&&allItems.length){
+    $('#list').innerHTML='<div class="item">لا توجد نتائج مطابقة للبحث.</div>';
+  }else render(items);
+  $('#searchCount').textContent=words.length?`${items.length} من ${allItems.length} منتج`:`${allItems.length} منتج`;
+}
+
+$('#searchBox').addEventListener('input',applySearch);
 
 function render(items){
   $('#list').innerHTML=items.length
