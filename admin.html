@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إدارة Dent Supply</title>
+
+<style>
+:root{--bg:#f4f8fb;--panel:#fff;--ink:#16323f;--soft:#4c6673;--primary:#1c6e8c;--dark:#124a5f;--line:#dfeaf0;--ok:#16865b;--danger:#b3543f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Segoe UI,Tahoma,sans-serif}
+.wrap{max-width:1000px;margin:auto;padding:28px 16px 60px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 14px 40px #16323f14}
+.login-panel{max-width:480px;margin:60px auto}
+.brand{display:flex;gap:12px;align-items:center;color:var(--dark);margin-bottom:18px}
+.mark{width:48px;height:48px;border-radius:14px;background:var(--primary);display:grid;place-items:center}
+.mark svg{width:28px;stroke:#fff}
+.brand strong{display:block;font-size:1.15rem}
+.brand small{color:var(--soft)}
+h1{margin:0 0 10px;color:var(--dark)}
+h2{margin:0 0 4px;color:var(--dark);font-size:1.05rem}
+.sub{margin:0 0 20px;color:var(--soft)}
+form{display:grid;gap:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+label{display:grid;gap:7px;font-weight:700}
+input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fbfdff;font:inherit;color:var(--ink)}
+input[type="file"]{cursor:pointer;padding:10px}
+textarea{min-height:100px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+button{border:0;border-radius:11px;padding:11px 16px;font:inherit;font-weight:800;cursor:pointer}
+button:disabled{opacity:.6;cursor:not-allowed}
+.primary{background:var(--primary);color:#fff}
+.secondary,.mini{background:var(--bg);color:var(--dark);border:1px solid var(--line)}
+.logout{background:#fff3f1;color:var(--danger);border:1px solid #f0d8d1;margin-bottom:20px}
+.status{display:none;margin-top:16px;padding:12px;border-radius:11px;font-weight:700}
+.status.show{display:block}
+.list{display:grid;gap:10px;margin-top:14px}
+.item{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:13px;padding:14px}
+.item strong,.item small{display:block}
+.item small{color:var(--soft)}
+.danger{background:#fff3f1;color:var(--danger);border:1px solid #f0d8d1}
+.preview{display:none;width:100px;height:100px;object-fit:cover;border-radius:12px;border:1px solid var(--line);margin-top:5px}
+#adminPanel{display:none}
+.variants-box{border:1px dashed #b9d0db;border-radius:14px;padding:16px;background:#f9fcfe}
+.variants-box .hint{margin:0 0 12px;color:var(--soft);font-size:.9rem;font-weight:400}
+.variant-row{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.variant-row input{padding:10px 12px}
+.variant-row .mini{padding:10px 12px}
+.badge{display:inline-block;background:#e6f2f7;color:var(--dark);border-radius:8px;padding:2px 8px;font-size:.8rem;margin-inline-start:6px}
+.catalog-box{margin:18px 0;padding:16px;border:1px solid #cfe2ea;border-radius:14px;background:#f7fbfd}
+.catalog-box h2{margin-bottom:7px}
+.catalog-box p{margin:0 0 12px;color:var(--soft);font-weight:400}
+.search-box{margin-top:26px;display:grid;gap:6px}
+.search-box h2{margin-bottom:2px}
+.search-box small{color:var(--soft);font-weight:400}
+@media(max-width:620px){
+.item{display:grid}
+.item-actions{display:flex}
+.item-actions button{flex:1}
+.variant-row{grid-template-columns:1fr 1fr auto}
+}
+</style>
+</head>
+
+<body>
+
+<main class="wrap" id="loginPanel">
+<section class="panel login-panel">
+<div class="brand">
+<span class="mark">
+<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 5c-1.6-1.6-4.8-2-6.2-.6C4.1 5.7 4 8.5 5 11c.8 2 1.4 4 1.6 6.2.1 1.4 1 2.3 2 2.3s1.6-1 1.8-2.4c.3-2.2.7-3.8 1.6-3.8s1.3 1.6 1.6 3.8c.2 1.4.8 2.4 1.8 2.4s1.9-.9 2-2.3c.2-2.2.8-4.2 1.6-6.2 1-2.5.9-5.3-.8-6.6C17.8 3 14.6 3.4 13 5"/>
+</svg>
+</span>
+<span><strong>Dent Supply</strong><small>لوحة إدارة مستلزمات وأدوات الأسنان</small></span>
+</div>
+<h1>تسجيل دخول الإدارة</h1>
+<p class="sub">يجب تسجيل الدخول للوصول إلى لوحة إدارة المنتجات.</p>
+<form id="loginForm">
+<label>البريد الإلكتروني
+<input id="loginEmail" type="email" autocomplete="username" required>
+</label>
+<label>كلمة المرور
+<input id="loginPassword" type="password" autocomplete="current-password" required>
+</label>
+<button class="primary" type="submit">دخول</button>
+</form>
+<div id="loginStatus" class="status"></div>
+</section>
+</main>
+
+<main class="wrap" id="adminPanel">
+<section class="panel">
+
+<div class="brand">
+<span class="mark">
+<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 5c-1.6-1.6-4.8-2-6.2-.6C4.1 5.7 4 8.5 5 11c.8 2 1.4 4 1.6 6.2.1 1.4 1 2.3 2 2.3s1.6-1 1.8-2.4c.3-2.2.7-3.8 1.6-3.8s1.3 1.6 1.6 3.8c.2 1.4.8 2.4 1.8 2.4s1.9-.9 2-2.3c.2-2.2.8-4.2 1.6-6.2 1-2.5.9-5.3-.8-6.6C17.8 3 14.6 3.4 13 5"/>
+</svg>
+</span>
+<span><strong>Dent Supply</strong><small>لوحة إدارة مستلزمات وأدوات الأسنان</small></span>
+</div>
+
+<button type="button" class="logout" id="logout">تسجيل الخروج</button>
+
+<h1>إدارة المنتجات</h1>
+<p class="sub">أي منتج تضيفه هنا يظهر في الصفحة الرئيسية عند جميع الزوار.</p>
+
+<div class="catalog-box">
+<h2>📥 استيراد المنتجات من Excel</h2>
+<p>1) ملف Excel: الأعمدة id | name | category | subcategory | description | price | image | variants<br>
+(عمود subcategory خاص بقسم Burs فقط: Turbine أو Handpiece)<br>
+2) صور المنتجات (اختياري): اختر كل الصور مرة وحدة، ويتم ربطها باسم الملف المكتوب بعمود image.<br>
+المنتج الموجود (بنفس الـ id أو الاسم) يتحدّث، والجديد يُضاف.</p>
+<label style="display:block;margin-bottom:10px">ملف Excel
+<input type="file" id="excelFile" accept=".xlsx,.xls,.csv">
+</label>
+<label style="display:block;margin-bottom:12px">الصور (اختياري، تقدر تختار عدة صور)
+<input type="file" id="excelImages" accept="image/*" multiple>
+</label>
+<div class="actions">
+<button type="button" class="primary" id="importExcel">استيراد من Excel</button>
+<button type="button" class="secondary" id="exportExcel">⬇️ تنزيل منتجات الموقع Excel</button>
+</div>
+</div>
+
+<form id="form">
+
+<div class="grid">
+<label>اسم المنتج
+<input name="name" required>
+</label>
+
+<label>الفئة
+<select name="category" id="categorySelect" required>
+<option value="Composites">Composites</option>
+<option value="Instruments">Instruments</option>
+<option value="Devices">Devices</option>
+<option value="Surgical Instruments">Surgical Instruments</option>
+<option value="Disposable Items">Disposable Items</option>
+<option value="Prosthetic Equipment">Prosthetic Equipment</option>
+<option value="Burs">Burs</option>
+</select>
+</label>
+
+<label id="subcategoryWrap" style="display:none">النوع (Burs)
+<select name="subcategory" id="subcategorySelect">
+<option value="Turbine">Turbine</option>
+<option value="Handpiece">Handpiece</option>
+</select>
+</label>
+
+<label>السعر الأساسي (د.ع)
+<input name="price" type="number" min="0" required>
+</label>
+
+<label>صورة المنتج
+<input name="image_file" type="file" accept="image/*">
+<input name="image_url" type="hidden">
+<small style="color:#4c6673;font-weight:400">اختر صورة من جهازك — الحد الأقصى 5MB</small>
+<img id="imagePreview" class="preview">
+</label>
+</div>
+
+<label>الوصف
+<textarea name="description"></textarea>
+</label>
+
+<div class="variants-box">
+<h2>أصناف المنتج</h2>
+<p class="hint">اتركها فارغة إذا المنتج بدون أصناف. إذا تركت سعر الصنف فارغاً يُستخدم السعر الأساسي.</p>
+<label style="margin-bottom:12px">
+إضافة عدة أصناف دفعة وحدة
+<textarea id="bulkVariants" style="min-height:130px;direction:ltr;text-align:left" placeholder="Coupland 1&#10;Coupland 2&#10;Coupland 3&#10;Bein small | 9000&#10;Bein large | 11000"></textarea>
+<small style="color:#4c6673;font-weight:400">كل صنف بسطر. للسعر اكتب بعد الاسم علامة | ثم السعر (اختياري).</small>
+</label>
+<div class="actions" style="margin-bottom:14px">
+<button type="button" class="primary" id="applyBulk">إضافة الأصناف للقائمة</button>
+<button type="button" class="secondary" id="addVariant">+ إضافة صنف واحد</button>
+</div>
+<div id="variantsList"></div>
+</div>
+
+<div class="actions">
+<button class="primary" type="submit">حفظ المنتج</button>
+<button type="button" class="secondary" id="clear">مسح الحقول</button>
+</div>
+</form>
+
+<div id="status" class="status"></div>
+
+<div class="search-box">
+<h2>🔍 البحث في المنتجات</h2>
+<input id="searchBox" type="search" placeholder="ابحث بالاسم، الفئة، الوصف، الصنف...">
+<small id="searchCount"></small>
+</div>
+
+<div id="list" class="list"></div>
+</section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+const SUPA_URL='https://ncurbamdczoiafvcnhzd.supabase.co';
+const KEY='sb_publishable_I_8sCiOUrVQzSi_6inzPYQ_nzWfZksF';
+const db=window.supabase.createClient(SUPA_URL,KEY);
+const STORAGE_BUCKET='product-images';
+
+async function uploadProductImage(file){
+  if(!file)return '';
+  if(file.size>5*1024*1024)throw new Error('حجم الصورة يجب أن يكون أقل من 5MB');
+  const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+  const allowed=['jpg','jpeg','png','webp','gif'];
+  if(!allowed.includes(ext))throw new Error('نوع الصورة غير مدعوم');
+  const fileName=`products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const {error:uploadError}=await db.storage.from(STORAGE_BUCKET).upload(fileName,file,{cacheControl:'3600',upsert:false,contentType:file.type});
+  if(uploadError)throw uploadError;
+  const {data}=db.storage.from(STORAGE_BUCKET).getPublicUrl(fileName);
+  return data.publicUrl;
+}
+
+const loginPanel=document.querySelector('#loginPanel');
+const adminPanel=document.querySelector('#adminPanel');
+const loginForm=document.querySelector('#loginForm');
+const loginStatus=document.querySelector('#loginStatus');
+
+function loginMessage(text,bad=false){
+  loginStatus.textContent=text;
+  loginStatus.className='status show';
+  loginStatus.style.color=bad?'#b3543f':'#16865b';
+  loginStatus.style.background=bad?'#fff3f1':'#edf8f2';
+}
+function showAdmin(){loginPanel.style.display='none';adminPanel.style.display='block';load();}
+function showLogin(){adminPanel.style.display='none';loginPanel.style.display='block';}
+
+loginForm.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const email=document.querySelector('#loginEmail').value.trim();
+  const password=document.querySelector('#loginPassword').value;
+  loginMessage('جاري تسجيل الدخول...');
+  const {error}=await db.auth.signInWithPassword({email,password});
+  if(error){loginMessage('فشل تسجيل الدخول: '+error.message,true);return;}
+  loginForm.reset();
+  loginMessage('');
+});
+
+document.querySelector('#logout').addEventListener('click',async()=>{
+  await db.auth.signOut();
+  showLogin();
+  loginMessage('تم تسجيل الخروج.');
+});
+
+db.auth.onAuthStateChange((event,session)=>{
+  if(session)showAdmin();else showLogin();
+});
+
+const CATEGORIES=['Composites','Instruments','Devices','Surgical Instruments','Disposable Items','Prosthetic Equipment','Burs'];
+const BURS_SUBS=['Turbine','Handpiece'];
+const OLD_CATEGORY_MAP={
+  exam:'Instruments',fill:'Composites',surgery:'Surgical Instruments',clean:'Instruments',
+  consumables:'Disposable Items','surgical instruments':'Surgical Instruments',
+  'Disposable items':'Disposable Items','Prosetheice equipment':'Prosthetic Equipment',
+  'Prostheice equipment':'Prosthetic Equipment',
+  bur:'Burs',burs:'Burs'
+};
+
+const DEFAULT_PRODUCTS=[
+{id:'p1',category:'Instruments',name:'مسبر أسنان مزدوج',description:'مسبر فحص دقيق من ستانلس ستيل طبي.',price:8500,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p1.jpg'},
+{id:'p2',category:'Instruments',name:'مرآة فحص فم رقم 5',description:'مرآة عاكسة بجودة عالية ومقبض مريح.',price:6000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p2.jpg'},
+{id:'p3',category:'Instruments',name:'ملقط فحص أسنان',description:'ملقط دقيق لإمساك القطن والمواد أثناء الفحص.',price:7000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p3.jpg'},
+{id:'p4',category:'Composites',name:'طقم أدوات حشو مركب',description:'طقم كامل لوضع وتشكيل الحشوات التجميلية.',price:32000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p4.webp'},
+{id:'p5',category:'Composites',name:'سباتيولا خلط الحشوة',description:'مقاس مزدوج لخلط مواد الحشو والسمنت.',price:9500,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p5.jpg'},
+{id:'p6',category:'Composites',name:'أداة كاربر لتشكيل الحشو',description:'طرفين للنحت الدقيق قبل التصلب.',price:11000,image_url:''},
+{id:'p7',category:'Surgical Instruments',name:'ملقط قلع أضراس علوي',description:'ستانلس ستيل جراحي معتمد ومريح.',price:45000,image_url:''},
+{id:'p8',category:'Surgical Instruments',name:'مبعد أنسجة جراحي',description:'لإبعاد اللثة أثناء العمليات البسيطة.',price:21000,image_url:''},
+{id:'p9',category:'Surgical Instruments',name:'مشرط جراحي بشفرات بديلة',description:'مقبض قابل لإعادة الاستخدام مع شفرات معقمة.',price:15500,image_url:''},
+{id:'p10',category:'Instruments',name:'مقياس تارتار وتنظيف',description:'طرفين لإزالة الجير من السطح.',price:13000,image_url:''},
+{id:'p11',category:'Instruments',name:'طقم تلميع الأسنان',description:'كؤوس تلميع مطاطية بثلاث درجات خشونة.',price:17000,image_url:''},
+{id:'p12',category:'Disposable Items',name:'قفازات فحص لاتكس',description:'صندوق 100 قفاز، مقاسات متعددة.',price:12000,image_url:'https://raw.githubusercontent.com/HUssiansk/Dent-Supplay/main/products/p12.jpg'},
+{id:'p13',category:'Disposable Items',name:'كمامات طبية ثلاثية الطبقات',description:'صندوق 50 كمامة معتمدة طبياً.',price:8000,image_url:''},
+{id:'p14',category:'Disposable Items',name:'لفافات قطن طبي للفم',description:'عبوة 100 قطعة، امتصاص عالي.',price:4500,image_url:''}
+];
+
+/* ===== القائمة الجديدة ===== */
+
+let editing=null;
+let allItems=[];
+const $=s=>document.querySelector(s);
+const form=$('#form');
+const imageFileInput=form.querySelector('[name="image_file"]');
+const imageUrlInput=form.querySelector('[name="image_url"]');
+const imagePreview=$('#imagePreview');
+const variantsList=$('#variantsList');
+const categorySelect=$('#categorySelect');
+const subcategoryWrap=$('#subcategoryWrap');
+const subcategorySelect=$('#subcategorySelect');
+
+/* إظهار قائمة النوع (Turbine/Handpiece) فقط عند اختيار Burs */
+function toggleSubcategory(){
+  subcategoryWrap.style.display=categorySelect.value==='Burs'?'grid':'none';
+}
+categorySelect.addEventListener('change',toggleSubcategory);
+
+function status(text,bad=false){
+  const e=$('#status');
+  e.textContent=text;
+  e.className='status show';
+  e.style.color=bad?'#b3543f':'#16865b';
+  e.style.background=bad?'#fff3f1':'#edf8f2';
+}
+
+function addVariantRow(name='',price=''){
+  const row=document.createElement('div');
+  row.className='variant-row';
+  row.innerHTML=`
+    <input type="text" class="v-name" placeholder="اسم الصنف (مثال: Coupland 3)" value="${escapeHtml(name)}">
+    <input type="number" class="v-price" min="0" placeholder="السعر (اختياري)" value="${escapeHtml(price)}">
+    <button type="button" class="mini danger v-remove">حذف</button>`;
+  variantsList.appendChild(row);
+}
+
+function readVariants(){
+  return [...variantsList.querySelectorAll('.variant-row')]
+    .map(r=>{
+      const name=r.querySelector('.v-name').value.trim();
+      const priceRaw=r.querySelector('.v-price').value.trim();
+      return {name,price:priceRaw===''?null:Number(priceRaw)};
+    }).filter(v=>v.name);
+}
+
+function setVariants(list){
+  variantsList.innerHTML='';
+  (Array.isArray(list)?list:[]).forEach(v=>addVariantRow(v.name,v.price??''));
+}
+
+$('#addVariant').addEventListener('click',()=>addVariantRow());
+
+$('#applyBulk').addEventListener('click',()=>{
+  const box=$('#bulkVariants');
+  const lines=box.value.split('\n').map(l=>l.trim()).filter(Boolean);
+  if(!lines.length){status('اكتب الأصناف أولاً، كل صنف بسطر.',true);return;}
+  const existing=new Set(readVariants().map(v=>v.name.toLowerCase()));
+  let added=0;
+  lines.forEach(line=>{
+    let name=line,price='';
+    const m=line.match(/^(.*?)\s*[|\t]\s*(\d+)\s*$/);
+    if(m){name=m[1].trim();price=m[2];}
+    if(!name||existing.has(name.toLowerCase()))return;
+    existing.add(name.toLowerCase());
+    addVariantRow(name,price);
+    added++;
+  });
+  box.value='';
+  status(`تمت إضافة ${added} صنف للقائمة. اضغط "حفظ المنتج" لتثبيتها.`);
+});
+
+variantsList.addEventListener('click',e=>{
+  const btn=e.target.closest('.v-remove');
+  if(btn)btn.closest('.variant-row').remove();
+});
+
+function mapCategory(category){
+  if(CATEGORIES.includes(category))return category;
+  const raw=String(category||'').trim();
+  return OLD_CATEGORY_MAP[raw]||OLD_CATEGORY_MAP[raw.toLowerCase()]||'Instruments';
+}
+
+function mapSubcategory(sub){
+  const s=String(sub||'').trim().toLowerCase();
+  return BURS_SUBS.find(x=>x.toLowerCase()===s)||'';
+}
+
+function normalize(p){
+  const category=mapCategory(p.category||p.cat||'Instruments');
+  return {
+    id:p.id,name:p.name||'',category,
+    subcategory:category==='Burs'?mapSubcategory(p.subcategory):'',
+    description:p.description||p.desc||'',price:Number(p.price)||0,
+    image_url:p.image_url||'',variants:Array.isArray(p.variants)?p.variants:[]
+  };
+}
+
+async function seedProducts(){
+  try{
+    const {data:rows,error:getErr}=await db.from('products').select('id');
+    if(getErr)throw getErr;
+    if(rows&&rows.length)return;
+    const payload=DEFAULT_PRODUCTS.map(p=>({
+      id:p.id,name:p.name,category:p.category,description:p.description,
+      price:p.price,image_url:p.image_url,variants:[],created_at:new Date().toISOString()
+    }));
+    const {error:insertErr}=await db.from('products').insert(payload);
+    if(insertErr)throw insertErr;
+    status('تمت إضافة المنتجات الأساسية إلى قاعدة البيانات.');
+  }catch(err){
+    console.error(err);
+    status('تعذر تهيئة المنتجات الأساسية: '+(err.message||err),true);
+  }
+}
+
+async function load(){
+  try{
+    await seedProducts();
+    const {data,error}=await db.from('products').select('*').order('created_at',{ascending:false});
+    if(error){status('تعذر قراءة المنتجات من Supabase: '+error.message,true);return;}
+    allItems=(data||[]).map(normalize);
+    applySearch();
+  }catch(err){status('تعذر تحميل المنتجات: '+(err.message||err),true);}
+}
+
+/* ===== البحث ===== */
+function norm(s){
+  return String(s??'').toLowerCase()
+    .replace(/[\u064B-\u0652\u0640]/g,'')
+    .replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي')
+    .trim();
+}
+
+function applySearch(){
+  const words=norm($('#searchBox').value).split(/\s+/).filter(Boolean);
+  const items=!words.length?allItems:allItems.filter(p=>{
+    const hay=norm([p.id,p.name,p.category,p.subcategory,p.description,
+      p.variants.map(v=>typeof v==='string'?v:v.name).join(' ')].join(' '));
+    return words.every(w=>hay.includes(w));
+  });
+  if(!items.length&&allItems.length){
+    $('#list').innerHTML='<div class="item">لا توجد نتائج مطابقة للبحث.</div>';
+  }else render(items);
+  $('#searchCount').textContent=words.length?`${items.length} من ${allItems.length} منتج`:`${allItems.length} منتج`;
+}
+
+$('#searchBox').addEventListener('input',applySearch);
+
+function render(items){
+  $('#list').innerHTML=items.length
+  ?items.map(p=>`
+    <div class="item">
+      <div>
+        <strong>${escapeHtml(p.name)} ${p.variants.length?`<span class="badge">${p.variants.length} أصناف</span>`:''}</strong>
+        <small>${escapeHtml(p.category)}${p.subcategory?' · '+escapeHtml(p.subcategory):''} • ${p.price.toLocaleString('ar-IQ')} د.ع</small>
+      </div>
+      <div class="item-actions">
+        <button class="mini" data-edit="${escapeHtml(p.id)}">تعديل</button>
+        <button class="mini danger" data-delete="${escapeHtml(p.id)}">حذف</button>
+      </div>
+    </div>`).join('')
+  :'<div class="item">لا توجد منتجات في قاعدة البيانات.</div>';
+}
+
+function escapeHtml(value){
+  return String(value??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+function clear(){
+  form.reset();
+  editing=null;
+  form.querySelector('[name=category]').value='Instruments';
+  subcategorySelect.value='Turbine';
+  toggleSubcategory();
+  form.querySelector('[name=price]').value='';
+  imageUrlInput.value='';
+  imagePreview.src='';
+  imagePreview.style.display='none';
+  variantsList.innerHTML='';
+  $('#bulkVariants').value='';
+}
+
+imageFileInput.addEventListener('change',()=>{
+  const file=imageFileInput.files?.[0];
+  if(!file){imagePreview.src='';imagePreview.style.display='none';return;}
+  if(file.size>5*1024*1024){
+    status('حجم الصورة يجب أن يكون أقل من 5MB',true);
+    imageFileInput.value='';return;
+  }
+  const reader=new FileReader();
+  reader.onload=event=>{
+    imagePreview.src=event.target.result;
+    imagePreview.style.display='block';
+  };
+  reader.readAsDataURL(file);
+});
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const f=new FormData(form);
+  const file=imageFileInput.files?.[0]||null;
+  const name=String(f.get('name')||'').trim();
+  if(!name){status('اكتب اسم المنتج.',true);return;}
+  let imageUrl=String(f.get('image_url')||'').trim();
+
+  if(file){
+    try{
+      status('جاري رفع الصورة...');
+      imageUrl=await uploadProductImage(file);
+    }catch(err){
+      console.error(err);
+      status('فشل رفع الصورة: '+(err.message||err),true);return;
+    }
+  }
+
+  const category=mapCategory(f.get('category'));
+
+  const row={
+    name:name,category,
+    subcategory:category==='Burs'?mapSubcategory(f.get('subcategory')):'',
+    description:String(f.get('description')||'').trim(),
+    price:Number(f.get('price')||0),image_url:imageUrl,variants:readVariants()
+  };
+
+  let result;
+  if(editing){
+    result=await db.from('products').update(row).eq('id',editing);
+  }else{
+    result=await db.from('products').insert({
+      ...row,id:'p'+Date.now(),created_at:new Date().toISOString()
+    });
+  }
+
+  if(result.error){status('فشل الحفظ: '+result.error.message,true);return;}
+  status(editing?'تم تحديث المنتج.':'تمت إضافة المنتج.');
+  clear();
+  load();
+});
+
+$('#list').addEventListener('click',async e=>{
+  const edit=e.target.closest('[data-edit]');
+  const del=e.target.closest('[data-delete]');
+
+  if(edit){
+    const {data,error}=await db.from('products').select('*').eq('id',edit.dataset.edit).single();
+    if(error){status(error.message,true);return;}
+    const p=normalize(data);
+    editing=p.id;
+    form.name.value=p.name;
+    form.category.value=p.category;
+    subcategorySelect.value=p.subcategory||'Turbine';
+    toggleSubcategory();
+    form.price.value=p.price;
+    form.description.value=p.description;
+    imageUrlInput.value=p.image_url;
+    imageFileInput.value='';
+    setVariants(p.variants);
+    if(p.image_url){imagePreview.src=p.image_url;imagePreview.style.display='block';}
+    else{imagePreview.src='';imagePreview.style.display='none';}
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  if(del&&confirm('حذف المنتج؟')){
+    const {error}=await db.from('products').delete().eq('id',del.dataset.delete);
+    if(error)status('فشل الحذف: '+error.message,true);
+    else{status('تم حذف المنتج.');load();}
+  }
+});
+
+$('#clear').onclick=clear;
+
+/* ===== إضافة القائمة دفعة واحدة ===== */
+function makeCatalogId(name){
+  return 'cat-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+
+
+async function importExcel(){
+  const file=$('#excelFile').files[0];
+  if(!file){status('اختر ملف Excel أولاً.',true);return;}
+  const button=$('#importExcel');
+  button.disabled=true;button.textContent='⏳ جاري الاستيراد...';
+  try{
+    const imgs={};
+    for(const f of $('#excelImages').files)imgs[f.name.trim().toLowerCase()]=f;
+    const uploaded={};
+    const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});
+    const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+    const {data:existing,error:getError}=await db.from('products').select('id,name');
+    if(getError)throw getError;
+    const byId=new Map(),byName=new Map();
+    (existing||[]).forEach(p=>{byId.set(String(p.id),p);byName.set(String(p.name||'').trim().toLowerCase(),p);});
+    const toInsert=[],errors=[];let updated=0;
+    for(let i=0;i<rows.length;i++){
+      const r=rows[i],line=i+2;
+      const get=k=>{const key=Object.keys(r).find(x=>x.trim().toLowerCase()===k);return key?String(r[key]).trim():'';};
+      const name=get('name');
+      if(!name)continue;
+      const id=get('id');
+      const match=(id&&byId.get(id))||byName.get(name.toLowerCase());
+      status(`⏳ معالجة ${i+1} من ${rows.length}: ${name}`);
+
+      let imageUrl='';
+      const imgCell=get('image');
+      if(imgCell){
+        const key=imgCell.toLowerCase();
+        if(/^https?:\/\//i.test(imgCell))imageUrl=imgCell;
+        else if(uploaded[key])imageUrl=uploaded[key];
+        else if(imgs[key]){
+          try{imageUrl=uploaded[key]=await uploadProductImage(imgs[key]);}
+          catch(e){errors.push(`سطر ${line}: ${e.message||e}`);}
+        }else errors.push(`سطر ${line}: الصورة ${imgCell} ما انختارت`);
+      }
+      const priceCell=get('price');
+      const price=priceCell!==''&&!isNaN(Number(priceCell))?Number(priceCell):null;
+      const variantsCell=get('variants');
+      const catCell=get('category');
+      const cat=CATEGORIES.find(c=>c.toLowerCase()===catCell.toLowerCase())
+        ||(catCell.toLowerCase()==='bur'?'Burs':undefined);
+      const subCell=get('subcategory');
+      const sub=mapSubcategory(subCell);
+      if(subCell&&!sub)errors.push(`سطر ${line}: النوع "${subCell}" غير صحيح (استخدم Turbine أو Handpiece)`);
+
+      if(match){
+        const upd={};
+        if(cat)upd.category=cat;
+        if(subCell)upd.subcategory=sub;
+        if(get('description'))upd.description=get('description');
+        if(price!==null)upd.price=price;
+        if(imageUrl)upd.image_url=imageUrl;
+        if(variantsCell)upd.variants=parseVariants(variantsCell);
+        if(Object.keys(upd).length){
+          const {error}=await db.from('products').update(upd).eq('id',match.id);
+          if(error)errors.push(`سطر ${line}: ${error.message}`);else updated++;
+        }
+      }else{
+        byName.set(name.toLowerCase(),{id:id||'',name});
+        const finalCat=cat||'Instruments';
+        toInsert.push({
+          id:id||makeCatalogId(name)+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),
+          name,category:finalCat,
+          subcategory:finalCat==='Burs'?sub:'',
+          description:get('description'),
+          price:price===null?0:price,image_url:imageUrl,
+          variants:parseVariants(variantsCell),
+          created_at:new Date().toISOString()
+        });
+      }
+    }
+    for(let i=0;i<toInsert.length;i+=50){
+      const {error}=await db.from('products').insert(toInsert.slice(i,i+50));
+      if(error)throw error;
+    }
+    let msg=`تمت إضافة ${toInsert.length} منتج جديد وتحديث ${updated} منتج.`;
+    if(errors.length)msg+=` ⚠️ ملاحظات (${errors.length}): `+errors.slice(0,5).join(' | ');
+    status(msg,errors.length>0&&!toInsert.length&&!updated);
+    $('#excelFile').value='';$('#excelImages').value='';
+    await load();
+  }catch(e){
+    console.error(e);status('خطأ أثناء الاستيراد: '+(e.message||e),true);
+  }finally{
+    button.disabled=false;button.textContent='استيراد من Excel';
+  }
+}
+
+function parseVariants(str){
+  return String(str||'').split(/[;؛\n]/).map(s=>s.trim()).filter(Boolean).map(s=>{
+    const i=s.lastIndexOf('|');
+    if(i<0)return {name:s,price:null};
+    const p=s.slice(i+1).trim();
+    return {name:s.slice(0,i).trim(),price:p!==''&&!isNaN(Number(p))?Number(p):null};
+  });
+}
+
+async function exportExcel(){
+  const button=$('#exportExcel');
+  button.disabled=true;
+  try{
+    const {data,error}=await db.from('products').select('*').order('created_at',{ascending:true});
+    if(error)throw error;
+    const rows=(data||[]).map(p=>{
+      const category=mapCategory(p.category||p.cat||'Instruments');
+      return {
+        id:p.id,name:p.name||'',category,
+        subcategory:category==='Burs'?mapSubcategory(p.subcategory):'',
+        description:p.description||p.desc||'',price:Number(p.price)||0,image:p.image_url||'',
+        variants:(Array.isArray(p.variants)?p.variants:[]).map(v=>{
+          if(typeof v==='string')return v;
+          return (v.price!==null&&v.price!==undefined&&v.price!=='')?`${v.name}|${v.price}`:v.name;
+        }).join('; ')
+      };
+    });
+    const ws=XLSX.utils.json_to_sheet(rows,{header:['id','name','category','subcategory','description','price','image','variants']});
+    ws['!cols']=[{wch:16},{wch:34},{wch:22},{wch:14},{wch:48},{wch:12},{wch:50},{wch:60}];
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Products');
+    XLSX.writeFile(wb,'products.xlsx');
+    status(`تم تنزيل ${rows.length} منتج.`);
+  }catch(e){
+    console.error(e);status('خطأ أثناء التنزيل: '+(e.message||e),true);
+  }finally{button.disabled=false;}
+}
+
+$('#importExcel').addEventListener('click',importExcel);
+$('#exportExcel').addEventListener('click',exportExcel);
+
+
+clear();
+
+(async()=>{
+  const {data}=await db.auth.getSession();
+  if(data.session)showAdmin();else showLogin();
+})();
+</script>
+</body>
+</html>
